@@ -114,25 +114,21 @@ a:focus-visible {
   padding-bottom: var(--space-2);
 }
 .logo {
-  font-family: "Libre Baskerville", Georgia, serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  min-height: 44px;
+  min-width: 44px;
+  line-height: 0;
   text-decoration: none;
-  line-height: 1.25;
-  max-width: 28rem;
 }
-.logo span {
+.logo img {
   display: block;
-  font-family: "Source Sans 3", sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--muted);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-top: var(--space-1);
+  height: 60px;
+  width: auto;
+  max-width: min(280px, 72vw);
 }
-.nav { display: flex; gap: var(--space-1); align-items: center; flex-wrap: wrap; }
+.nav { display: flex; gap: 0; align-items: center; flex-wrap: wrap; margin-left: auto; }
 .nav a {
   display: inline-flex;
   align-items: center;
@@ -217,6 +213,7 @@ a:focus-visible {
   max-width: 52ch;
   margin: 0 0 var(--space-5);
   font-size: 18px;
+  text-wrap: pretty;
 }
 
 .mag {
@@ -321,15 +318,17 @@ a:focus-visible {
   color: var(--muted);
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
+.site-footer > div { min-width: 0; max-width: 100%; }
 .site-footer a {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
   font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 .project-hero { padding: var(--space-6) 0 var(--space-6); }
@@ -337,9 +336,11 @@ a:focus-visible {
   font-family: "Libre Baskerville", Georgia, serif;
   font-size: clamp(36px, 5vw, 56px);
   margin: 0 0 var(--space-2);
-  line-height: 1.1;
-  text-wrap: balance;
+  line-height: 1.15;
+  text-wrap: wrap;
+  overflow-wrap: break-word;
 }
+.project-hero h1 .break { display: none; }
 .project-lede {
   max-width: 52ch;
   color: var(--muted);
@@ -407,19 +408,49 @@ a:focus-visible {
 
 @media (max-width: 860px) {
   :root { --edge: 16px; }
-  .header-inner { align-items: flex-start; }
-  .logo { max-width: 12rem; }
-  .nav { flex-direction: column; align-items: flex-end; gap: 0; }
+  .logo img { height: 56px; }
+  .hero { padding-top: var(--space-5); }
+  .hero h1 { font-size: clamp(32px, 10vw, 44px); }
+  .project-hero { padding-top: var(--space-4); }
+  .project-hero h1 { font-size: clamp(30px, 8.4vw, 40px); }
   .mag { grid-template-columns: 1fr; }
-  .mag-card.big { grid-row: auto; min-height: 320px; }
-  .mag-card.sm { min-height: 240px; }
+  .mag-card.big, .mag-card.sm { min-height: 0; grid-row: auto; }
+  .mag-card figure, .mag-card picture { height: auto; }
+  .mag-card img { height: auto; aspect-ratio: 3 / 2; }
   .about { grid-template-columns: 1fr; }
   .process ol { grid-template-columns: 1fr; }
   .project-grid { grid-template-columns: 1fr; }
   .project-grid .wide,
-  .project-grid figure { min-height: 240px; }
-  .hero { padding-top: var(--space-5); }
-  .work-grid { grid-template-columns: 1fr; }
+  .project-grid figure { min-height: 0; }
+  .project-grid picture { height: auto; }
+  .project-grid img { height: auto; aspect-ratio: 3 / 2; }
+  .work-grid { grid-template-columns: 1fr; gap: var(--space-4) 0; }
+  .btn-row .btn { max-width: 100%; }
+}
+
+@media (max-width: 540px) {
+  .project-hero h1 .break {
+    display: block;
+    height: 0;
+    line-height: 0;
+    font-size: 0;
+  }
+  .header-inner {
+    flex-wrap: wrap;
+    align-items: center;
+    row-gap: 0;
+  }
+  .nav {
+    flex: 1 1 100%;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
+  .nav a { padding: 0 12px; }
+}
+
+@media (max-width: 360px) {
+  .nav a { padding: 0 10px; }
+  .btn-row { flex-direction: column; align-items: flex-start; }
 }
 
 @media (prefers-reduced-motion: reduce) {

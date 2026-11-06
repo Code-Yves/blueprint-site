@@ -437,6 +437,14 @@ def picture(image: dict, depth: int, sizes: str, eager: bool = False) -> str:
     )
 
 
+def heading_html(text: str) -> str:
+    """Keep a middle dot on the first line when a title wraps."""
+    if " · " in text:
+        left, right = text.split(" · ", 1)
+        return f'{esc(left)} ·<span class="break"></span> {esc(right)}'
+    return esc(text)
+
+
 def chrome(depth: int, current: str) -> str:
     home = url_for(depth, "home")
     gallery = url_for(depth, "gallery")
@@ -446,10 +454,11 @@ def chrome(depth: int, current: str) -> str:
         current_attr = ' aria-current="page"' if current == key else ""
         return f'<a href="{href}"{current_attr}>{label}</a>'
 
+    logo = asset(depth, "assets/logo.png")
     return f"""<a class="skip" href="#content">Skip to content</a>
 <header class="site-header">
   <div class="wrap header-inner">
-    <a class="logo" href="{home}">Blueprint Construction Services<span>Ottawa builder since 2005</span></a>
+    <a class="logo" href="{home}"><img src="{logo}" alt="Blueprint Construction Services" width="773" height="302"></a>
     <nav class="nav" aria-label="Primary">
       {item(home, "Home", "home")}
       {item(gallery, "Projects", "projects")}
@@ -715,7 +724,7 @@ def render_project(project: dict, images: dict) -> str:
     <div class="wrap">
       <a class="back-link" href="../">All projects</a>
       <p class="project-meta">{esc(project["kicker"])}</p>
-      <h1>{esc(project["heading"])}</h1>
+      <h1>{heading_html(project["heading"])}</h1>
       <p class="project-lede">{esc(project["lede"])}</p>
       <div class="project-grid">
         {''.join(figures)}
@@ -924,6 +933,7 @@ def main() -> None:
 
     (OUT / "assets").mkdir(parents=True, exist_ok=True)
     shutil.copyfile(SRC / "styles.css", OUT / "assets" / "styles.css")
+    shutil.copyfile(SRC / "logo.png", OUT / "assets" / "logo.png")
     font_out = OUT / "assets" / "fonts"
     font_out.mkdir(parents=True, exist_ok=True)
     for font in FONT_DIR.glob("*.woff2"):
