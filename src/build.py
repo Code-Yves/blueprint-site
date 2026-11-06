@@ -597,7 +597,7 @@ def render_home(images: dict) -> str:
 
   <section class="section">
     <div class="wrap about">
-      {picture(images["yves"], depth, "(max-width: 860px) 100vw, 480px")}
+      <figure class="portrait">{picture(images["yves"], depth, "(max-width: 699px) 40vw, 220px")}</figure>
       <div class="prose">
         <p class="eyebrow">About</p>
         <h2 class="section-title">Hi, I’m Yves Eggleston</h2>
@@ -789,9 +789,9 @@ def render_project_recovery(images: dict) -> str:
     depth = 1
     title = "Project Recovery | Blueprint Construction"
     description = (
-        "Project Recovery is a first look for Ottawa owners whose builds have stopped. "
-        "Blueprint can help with a plan, a conversation with your trades, "
-        "and financing that may be available after assessment. Call Yves Eggleston."
+        "Project Recovery helps banks, investors, realtors, lawyers, and owners "
+        "managing their own builds in Ottawa. We help you understand where a project "
+        "stands and what comes next. Call Yves Eggleston."
     )
     phone = "613 262 2442"
     tel = "tel:+16132622442"
@@ -802,15 +802,16 @@ def render_project_recovery(images: dict) -> str:
     <div class="wrap">
       <p class="hero-kicker">Project Recovery</p>
       <h1>Your project, back on track.</h1>
-      <p class="hero-lead">Builds stall for all kinds of reasons. Whatever stopped yours, we can help you get it finished.</p>
+      <p class="hero-audience">We work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.</p>
+      <p class="hero-lead">Whether a project has stalled or become more than you can manage, we help you understand where it stands and what comes next.</p>
     </div>
   </section>
 
   <section class="section flush-top">
     <div class="wrap">
       <p class="eyebrow">Who it is for</p>
-      <h2 class="section-title">Owners in Ottawa whose builds have stopped.</h2>
-      <p class="section-intro">A stopped build is stressful. It is not a verdict on you. We look at what is in front of us and help you find a way forward.</p>
+      <h2 class="section-title">Banks, investors, realtors, lawyers, and owners.</h2>
+      <p class="section-intro">These are people in Ottawa managing a build who need help completing it. A project may have stalled, or it may have become more than you can manage. That is not a verdict on you. We look at what is in front of us and help you find a way forward.</p>
       <ul class="plain-list">
         <li>Disputes over incomplete or poor trade work</li>
         <li>Permits that have stalled</li>
@@ -865,7 +866,7 @@ def render_project_recovery(images: dict) -> str:
         </article>
         <article class="track-card">
           <h3>New home warranty</h3>
-          <p>We help you identify and document concerns and prepare the submissions that fit your situation. What is covered, and the deadlines, depend on your home and your warranty. Not every concern is eligible, and a repair is not guaranteed.</p>
+          <p>We help you identify and document concerns and prepare the submissions that fit your situation. What is covered, and the deadlines, depend on the home and the warranty. Not every concern is eligible, and a repair is not guaranteed.</p>
         </article>
         <article class="track-card">
           <h3>Liens and holdbacks</h3>
@@ -877,11 +878,11 @@ def render_project_recovery(images: dict) -> str:
         </article>
         <article class="track-card">
           <h3>Damage on site</h3>
-          <p>After a fire, a storm, a theft, or water damage, we document the condition and estimate the repair so you can speak with your insurer. We are not licensed adjusters, and we do not promise that a claim will be paid.</p>
+          <p>After a fire, a storm, a theft, or water damage, we document the condition and estimate the repair so you can speak with the insurer. We are not licensed adjusters, and we do not promise that a claim will be paid.</p>
         </article>
         <article class="track-card">
           <h3>Power of sale</h3>
-          <p>We assess the work still to do and share building and cost information with you and with your lawyer or advisers. We do not promise when that information will be ready, and we do not advise on enforcement or the law.</p>
+          <p>We assess the work still to do and share building and cost information with you and with the lawyer or advisers on the file. We do not promise when that information will be ready, and we do not advise on enforcement or the law.</p>
         </article>
         <article class="track-card">
           <h3>Last steps to occupancy</h3>
@@ -893,7 +894,7 @@ def render_project_recovery(images: dict) -> str:
 
   <section class="section">
     <div class="wrap">
-      <h2 class="section-title">For lenders</h2>
+      <h2 class="section-title">For banks and other lenders</h2>
       <p class="section-intro">Do you hold a stalled construction loan? We can review the work in place and the cost still left, so you can decide your next step. This review is not an appraisal, not a regulated certification, and not legal advice.</p>
     </div>
   </section>
@@ -914,7 +915,7 @@ def render_project_recovery(images: dict) -> str:
 
   <section class="cta-band">
     <div class="wrap">
-      <h2>If your project has stopped, talk to us before your next move.</h2>
+      <h2>If a project has stalled or become more than you can manage, talk to us before the next move.</h2>
       <p>Call Yves Eggleston.</p>
       <a class="btn" href="{tel}">Call {phone}</a>
       <p>Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
@@ -1020,6 +1021,17 @@ def check_output() -> None:
                 raise SystemExit("project recovery promises a timeline")
             if "Back on Track" in visible or "back-on-track" in visible:
                 raise SystemExit("stale previous page name in visible copy")
+            if "bit off more than you can chew" in visible.lower():
+                raise SystemExit("judgmental phrasing in project recovery copy")
+            for phrase in (
+                "Your project, back on track.",
+                "We work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.",
+                "Whether a project has stalled or become more than you can manage, we help you understand where it stands and what comes next.",
+            ):
+                if phrase not in visible:
+                    raise SystemExit(f"project recovery missing: {phrase}")
+            if "Owners in Ottawa whose builds have stopped" in visible:
+                raise SystemExit("project recovery audience is still owner only")
             continue
         for term in phone_terms:
             if term.lower() in text.lower():

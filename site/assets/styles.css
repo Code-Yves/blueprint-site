@@ -187,6 +187,17 @@ a:focus-visible {
   max-width: 42ch;
   margin: 0 0 var(--space-4);
 }
+.hero-audience {
+  font-size: clamp(20px, 2.2vw, 24px);
+  line-height: 1.4;
+  font-weight: 600;
+  color: var(--ink);
+  max-width: 36em;
+  margin: 0 0 var(--space-2);
+}
+.hero-audience + .hero-lead {
+  max-width: 40em;
+}
 .btn-row { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .btn {
   display: inline-flex;
@@ -270,6 +281,18 @@ a:focus-visible {
 .about picture { display: block; }
 .about img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 18%; }
 .about .wide-photo img { aspect-ratio: 3 / 2; object-position: center; }
+.about:has(.portrait) {
+  grid-template-columns: 220px minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.about .portrait { margin: 0; }
+.about .portrait img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: center 18%;
+}
 .prose p { margin: 0 0 var(--space-2); color: var(--muted); max-width: 62ch; }
 .prose strong { color: var(--ink); }
 .prose a { font-weight: 600; }
@@ -492,6 +515,16 @@ a:focus-visible {
   .btn-row .btn { max-width: 100%; }
 }
 
+@media (max-width: 699px) {
+  .about:has(.portrait) { display: block; }
+  .about:has(.portrait)::after { content: ""; display: block; clear: both; }
+  .about .portrait {
+    float: left;
+    width: clamp(132px, 40vw, 168px);
+    margin: 0.2em var(--space-2) var(--space-2) 0;
+  }
+}
+
 @media (max-width: 540px) {
   .project-hero h1 .break {
     display: block;
@@ -515,6 +548,7 @@ a:focus-visible {
 @media (max-width: 360px) {
   .nav a { padding: 0 10px; }
   .btn-row { flex-direction: column; align-items: flex-start; }
+  .about .section-title { font-size: 23px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
