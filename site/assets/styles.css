@@ -538,15 +538,21 @@ a:focus-visible {
     row-gap: 0;
   }
   .nav {
-    flex: 1 1 100%;
-    justify-content: flex-start;
-    margin-left: 0;
+    flex: 1 1 auto;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: calc(100% + (var(--edge) * 2));
+    margin-left: calc(var(--edge) * -1);
+    margin-right: calc(var(--edge) * -1);
+    padding: 0 6px;
   }
-  .nav a { padding: 0 12px; }
+  .nav a {
+    padding: 0 4px;
+    min-height: 44px;
+  }
 }
 
 @media (max-width: 360px) {
-  .nav a { padding: 0 10px; }
   .btn-row { flex-direction: column; align-items: flex-start; }
   .about .section-title { font-size: 23px; }
 }
