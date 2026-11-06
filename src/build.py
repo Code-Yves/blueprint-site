@@ -447,7 +447,7 @@ def chrome(depth: int, current: str) -> str:
         current_attr = ' aria-current="page"' if current == key else ""
         return f'<a href="{href}"{current_attr}>{label}</a>'
 
-    track = url_for(depth, "back-on-track")
+    track = url_for(depth, "project-recovery")
     logo = asset(depth, "assets/logo.png")
     return f"""<a class="skip" href="#content">Skip to content</a>
 <header class="site-header">
@@ -456,7 +456,7 @@ def chrome(depth: int, current: str) -> str:
     <nav class="nav" aria-label="Primary">
       {item(home, "Home", "home")}
       {item(gallery, "Projects", "projects")}
-      {item(track, "Back on Track", "track")}
+      {item(track, "Project Recovery", "track")}
       {item(contact, "Contact", "contact")}
     </nav>
   </div>
@@ -785,11 +785,11 @@ def render_contact(images: dict) -> str:
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
 
-def render_back_on_track(images: dict) -> str:
+def render_project_recovery(images: dict) -> str:
     depth = 1
-    title = "Your project, back on track | Blueprint Construction"
+    title = "Project Recovery | Blueprint Construction"
     description = (
-        "A first look for Ottawa owners whose builds have stopped. "
+        "Project Recovery is a first look for Ottawa owners whose builds have stopped. "
         "Blueprint can help with a plan, a conversation with your trades, "
         "and financing that may be available after assessment. Call Yves Eggleston."
     )
@@ -800,7 +800,7 @@ def render_back_on_track(images: dict) -> str:
 <main id="content">
   <section class="hero">
     <div class="wrap">
-      <p class="hero-kicker">Blueprint Construction</p>
+      <p class="hero-kicker">Project Recovery</p>
       <h1>Your project, back on track.</h1>
       <p class="hero-lead">Builds stall for all kinds of reasons. Whatever stopped yours, we can help you get it finished.</p>
     </div>
@@ -926,7 +926,7 @@ def render_back_on_track(images: dict) -> str:
         depth=depth,
         title=title,
         description=description,
-        canonical_path="/back-on-track/",
+        canonical_path="/project-recovery/",
         og_image=images["beechwood-exterior"],
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
@@ -965,7 +965,7 @@ def sitemap(images: dict) -> str:
     pages = {
         "/": ["beechwood-living", "heritage-ncc", "beacon", "yves"],
         "/gallery/": [image_id for project in PROJECTS for image_id in project_photo_ids(project)],
-        "/back-on-track/": [],
+        "/project-recovery/": [],
         "/contact/": ["steel"],
     }
     urls = []
@@ -1007,17 +1007,19 @@ def check_output() -> None:
             raise SystemExit(f"Forbidden string in output: {term}")
     for path in html_files:
         text = path.read_text()
-        if path.parent.name == "back-on-track":
+        if path.parent.name == "project-recovery":
             visible = re.sub(r"<script[\s\S]*?</script>", " ", text)
             visible = re.sub(r"<style[\s\S]*?</style>", " ", visible)
             visible = re.sub(r"<[^>]+>", " ", visible)
             for mark in ("-", "–", "—"):
                 if mark in visible:
-                    raise SystemExit(f"visible dash in back on track copy: {mark}")
+                    raise SystemExit(f"visible dash in project recovery copy: {mark}")
             if "613 262 2442" not in visible or "yves@blueprintbuilds.com" not in visible:
-                raise SystemExit("back on track contact block is incomplete")
+                raise SystemExit("project recovery contact block is incomplete")
             if "same day" in visible.lower():
-                raise SystemExit("back on track promises a timeline")
+                raise SystemExit("project recovery promises a timeline")
+            if "Back on Track" in visible or "back-on-track" in visible:
+                raise SystemExit("stale previous page name in visible copy")
             continue
         for term in phone_terms:
             if term.lower() in text.lower():
@@ -1028,7 +1030,7 @@ def check_output() -> None:
     for required in (f"{ORIGIN}/<", f"{ORIGIN}/gallery/<", f"{ORIGIN}/contact/<"):
         # loc tags
         pass
-    for path in ("/", "/gallery/", "/back-on-track/", "/contact/"):
+    for path in ("/", "/gallery/", "/project-recovery/", "/contact/"):
         if f"<loc>{ORIGIN}{path}</loc>" not in sitemap_text:
             raise SystemExit(f"sitemap missing {path}")
     titles = set()
@@ -1122,9 +1124,9 @@ def main() -> None:
     contact = OUT / "contact"
     contact.mkdir(exist_ok=True)
     (contact / "index.html").write_text(render_contact(encoded))
-    track = OUT / "back-on-track"
+    track = OUT / "project-recovery"
     track.mkdir(exist_ok=True)
-    (track / "index.html").write_text(render_back_on_track(encoded))
+    (track / "index.html").write_text(render_project_recovery(encoded))
     home_redirect = OUT / "home"
     home_redirect.mkdir(exist_ok=True)
     (home_redirect / "index.html").write_text(render_home_redirect())
