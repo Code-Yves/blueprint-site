@@ -2,7 +2,7 @@
 
 Static site for Blueprint Construction Services, an Ottawa builder since 2005. The design is direction A, editorial minimal. Copy and photographs come from the public site at blueprintottawa.com.
 
-This repository does not change that live site, its DNS, or its domain. There is no CNAME file.
+The published site is the `site/` directory. `site/CNAME` names `blueprintottawa.com` so GitHub Pages can serve it at the apex. DNS is changed at Squarespace, not in this repo. `blueprintbuilds.com` is not part of this site.
 
 ## Pages
 

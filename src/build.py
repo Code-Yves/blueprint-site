@@ -341,14 +341,6 @@ PROJECTS = [
         "note": "A furnished living room with a fireplace and light wood floors.",
         "cover": "living-room",
     },
-    {
-        "id": "steel",
-        "slug": None,
-        "heading": "Building in progress",
-        "meta": "In progress",
-        "note": "A two-storey frame wrapped in sheathing, beside a steel bay.",
-        "cover": "steel",
-    },
 ]
 
 
@@ -653,6 +645,12 @@ def render_home(images: dict) -> str:
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
 
+def project_photo_ids(project: dict) -> list[str]:
+    if project.get("images"):
+        return [image_id for image_id, _role in project["images"]]
+    return [project["cover"]]
+
+
 def render_gallery(images: dict) -> str:
     depth = 1
     title = "Projects | Blueprint Construction"
@@ -661,22 +659,23 @@ def render_gallery(images: dict) -> str:
         "multi-unit buildings, heritage restoration, and commercial work."
     )
     cards = []
+    first_photo = True
+    sizes = "(max-width: 700px) 100vw, (max-width: 1100px) 46vw, 32vw"
     for project in PROJECTS:
-        cover = images[project["cover"]]
-        media = picture(cover, depth, "(max-width: 860px) 100vw, 540px", eager=project is PROJECTS[0])
-        text = (
-            f'<h2>{esc(project["heading"])}</h2>'
+        figures = []
+        for image_id in project_photo_ids(project):
+            figures.append(
+                f"<figure>{picture(images[image_id], depth, sizes, eager=first_photo)}</figure>"
+            )
+            first_photo = False
+        cards.append(
+            f'<article class="work-card" id="{project["id"]}">'
+            f"<h2>{heading_html(project['heading'])}</h2>"
             f'<p class="meta">{esc(project["meta"])}</p>'
             f'<p class="note">{esc(project["note"])}</p>'
+            f'<div class="photo-set">{"".join(figures)}</div>'
+            "</article>"
         )
-        if project["slug"]:
-            inner = (
-                f'<a class="work-link" href="{project["slug"]}/">'
-                f"{media}{text}<span class=\"more\">View project</span></a>"
-            )
-        else:
-            inner = f"<figure>{media}</figure>{text}"
-        cards.append(f'<article class="work-card" id="{project["id"]}">{inner}</article>')
     body = f"""{chrome(depth, "projects")}
 <main id="content">
   <section class="hero">
@@ -688,7 +687,7 @@ def render_gallery(images: dict) -> str:
   </section>
   <section class="section flush-top">
     <div class="wrap">
-      <div class="work-grid">
+      <div class="project-list">
         {''.join(cards)}
       </div>
     </div>
@@ -696,7 +695,6 @@ def render_gallery(images: dict) -> str:
   {cta()}
 </main>
 {footer(depth)}"""
-    # inline style padding-top:0 is a one-off; keep it in CSS instead.
     return head(
         depth=depth,
         title=title,
@@ -817,7 +815,7 @@ def sitemap(images: dict) -> str:
 
     pages = {
         "/": ["beechwood-living", "heritage-ncc", "beacon", "yves"],
-        "/gallery/": [project["cover"] for project in PROJECTS],
+        "/gallery/": [image_id for project in PROJECTS for image_id in project_photo_ids(project)],
         "/contact/": ["steel"],
     }
     urls = []
@@ -895,6 +893,14 @@ def check_output() -> None:
     home = (OUT / "index.html").read_text()
     if "<title>Blueprint Construction | Ottawa builder since 2005</title>" not in home:
         raise SystemExit("home title mismatch")
+    gallery = (OUT / "gallery" / "index.html").read_text()
+    if "View project" in gallery:
+        raise SystemExit("gallery still links out with View project")
+    if "Building in progress" in gallery or 'id="steel"' in gallery:
+        raise SystemExit("building in progress is still on the projects page")
+    cname = (OUT / "CNAME").read_text().strip()
+    if cname != "blueprintottawa.com":
+        raise SystemExit("published CNAME is not the apex domain")
 
 
 def directory_size(path: Path, suffix: str | None = None) -> int:
@@ -960,6 +966,7 @@ def main() -> None:
     (OUT / "robots.txt").write_text(
         "User-agent: *\nAllow: /\n\nSitemap: https://blueprintottawa.com/sitemap.xml\n"
     )
+    (OUT / "CNAME").write_text("blueprintottawa.com\n")
     check_output()
 
     original = sum(p.stat().st_size for p in PHOTO_DIR.iterdir() if p.is_file())

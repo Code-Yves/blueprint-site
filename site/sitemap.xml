@@ -43,14 +43,39 @@
       <image:caption>Rooftop lounge in New Edinburgh at dusk, with a fire pit, Adirondack chairs, a sofa, and a glazed pavilion.</image:caption>
     </image:image>
     <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rooftop-dining-1500.jpg</image:loc>
+      <image:title>New Edinburgh rooftop dining deck</image:title>
+      <image:caption>Rooftop dining deck in New Edinburgh at dusk, with string lights, a picnic table, lounge chairs, a hot tub, and a grill.</image:caption>
+    </image:image>
+    <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/heritage-ncc-1500.jpg</image:loc>
       <image:title>Heritage stone house restored for the NCC</image:title>
       <image:caption>Stone heritage house with decorative bargeboard and a white porch, restored for the National Capital Commission in Ottawa in 2024.</image:caption>
     </image:image>
     <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-living-1500.jpg</image:loc>
+      <image:title>Beechwood semi living room</image:title>
+      <image:caption>Living and dining room in a Beechwood semi-detached home, with a light sofa, black chairs, a round coffee table, and a linear fireplace.</image:caption>
+    </image:image>
+    <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/beechwood-exterior-1500.jpg</image:loc>
       <image:title>Beechwood semi-detached homes at twilight</image:title>
       <image:caption>Pair of modern semi-detached homes on Beechwood at twilight, with stone and stucco walls, lit windows, and garage doors in the snow.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-kitchen-1500.jpg</image:loc>
+      <image:title>Beechwood semi kitchen</image:title>
+      <image:caption>Kitchen in a Beechwood semi-detached home, with a walnut island, white counters, a wall oven, and three globe pendant lights.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-bath-1500.jpg</image:loc>
+      <image:title>Beechwood semi bathroom</image:title>
+      <image:caption>Bathroom in a Beechwood semi-detached home, with a freestanding tub, a wood vanity, and a walk-in shower.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-stair-1500.jpg</image:loc>
+      <image:title>Beechwood semi staircase</image:title>
+      <image:caption>Light wood staircase with metal balusters in a Beechwood semi-detached home, looking through to the living room.</image:caption>
     </image:image>
     <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/beacon-1500.jpg</image:loc>
@@ -78,6 +103,16 @@
       <image:caption>Single-storey commercial plaza in Orléans with a pale facade, black awnings, and a landscaped parking edge, finished in 2018.</image:caption>
     </image:image>
     <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/orleans-reception-1500.jpg</image:loc>
+      <image:title>Orléans commercial reception</image:title>
+      <image:caption>Reception and waiting area in an Orléans commercial interior, with a grey desk, a blue chair, and a backlit spine panel.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/orleans-hall-1500.jpg</image:loc>
+      <image:title>Orléans commercial hallway</image:title>
+      <image:caption>Waiting area and hallway in an Orléans commercial interior, with blue chairs, grey partitions, and a wall-mounted screen.</image:caption>
+    </image:image>
+    <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/new-ed-multi-1500.jpg</image:loc>
       <image:title>Multi-unit building in New Edinburgh</image:title>
       <image:caption>Narrow multi-unit residential building in New Edinburgh, stone and metal cladding, photographed at dusk in 2016.</image:caption>
@@ -98,19 +133,29 @@
       <image:caption>Open living space in a Rideau Gardens addition, with wide hardwood floors and black-framed sliding doors to a deck, 2009.</image:caption>
     </image:image>
     <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rideau-stair-1200.jpg</image:loc>
+      <image:title>Rideau Gardens stair</image:title>
+      <image:caption>Open-riser staircase with wood treads and a black steel and glass rail in a Rideau Gardens home addition.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rideau-loft-1200.jpg</image:loc>
+      <image:title>Rideau Gardens upper landing</image:title>
+      <image:caption>Upper landing in a Rideau Gardens addition, with a built-in desk under a large window and a glass guardrail.</image:caption>
+    </image:image>
+    <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/interior-kitchen-1500.jpg</image:loc>
       <image:title>Residential kitchen with a stone island</image:title>
       <image:caption>White residential kitchen with a stone waterfall island, double wall ovens, and slim pendant lights.</image:caption>
     </image:image>
     <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/interior-living-1500.jpg</image:loc>
+      <image:title>Residential living room with a fireplace</image:title>
+      <image:caption>Unfurnished living room with pale wood floors, a stone fireplace wall, and sliding doors to a balcony.</image:caption>
+    </image:image>
+    <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/living-room-1500.jpg</image:loc>
       <image:title>Furnished residential living room</image:title>
       <image:caption>Furnished living room with a grey sectional, a white coffee table, a fireplace, and light wood floors.</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://blueprintottawa.com/assets/img/steel-1500.jpg</image:loc>
-      <image:title>Building under construction in green sheathing</image:title>
-      <image:caption>Two-storey building under construction, wrapped in green sheathing, beside a steel industrial bay.</image:caption>
     </image:image>
   </url>
   <url>
