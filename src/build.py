@@ -9,6 +9,7 @@ No network calls. Requires Pillow, cwebp, and avifenc.
 from __future__ import annotations
 
 import html
+import re
 import shutil
 import subprocess
 from concurrent.futures import ProcessPoolExecutor
@@ -446,6 +447,7 @@ def chrome(depth: int, current: str) -> str:
         current_attr = ' aria-current="page"' if current == key else ""
         return f'<a href="{href}"{current_attr}>{label}</a>'
 
+    track = url_for(depth, "back-on-track")
     logo = asset(depth, "assets/logo.png")
     return f"""<a class="skip" href="#content">Skip to content</a>
 <header class="site-header">
@@ -454,6 +456,7 @@ def chrome(depth: int, current: str) -> str:
     <nav class="nav" aria-label="Primary">
       {item(home, "Home", "home")}
       {item(gallery, "Projects", "projects")}
+      {item(track, "Back on Track", "track")}
       {item(contact, "Contact", "contact")}
     </nav>
   </div>
@@ -782,6 +785,152 @@ def render_contact(images: dict) -> str:
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
 
+def render_back_on_track(images: dict) -> str:
+    depth = 1
+    title = "Your project, back on track | Blueprint Construction"
+    description = (
+        "A first look for Ottawa owners whose builds have stopped. "
+        "Blueprint can help with a plan, a conversation with your trades, "
+        "and financing that may be available after assessment. Call Yves Eggleston."
+    )
+    phone = "613 262 2442"
+    tel = "tel:+16132622442"
+    mail = "yves@blueprintbuilds.com"
+    body = f"""{chrome(depth, "track")}
+<main id="content">
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-kicker">Blueprint Construction</p>
+      <h1>Your project, back on track.</h1>
+      <p class="hero-lead">Builds stall for all kinds of reasons. Whatever stopped yours, we can help you get it finished.</p>
+    </div>
+  </section>
+
+  <section class="section flush-top">
+    <div class="wrap">
+      <p class="eyebrow">Who it is for</p>
+      <h2 class="section-title">Owners in Ottawa whose builds have stopped.</h2>
+      <p class="section-intro">A stopped build is stressful. It is not a verdict on you. We look at what is in front of us and help you find a way forward.</p>
+      <ul class="plain-list">
+        <li>Disputes over incomplete or poor trade work</li>
+        <li>Permits that have stalled</li>
+        <li>Trades that are missing</li>
+        <li>Money running out</li>
+        <li>A lender stepping back</li>
+        <li>A builder who has left</li>
+        <li>Warranty repairs still outstanding</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section flush-top">
+    <div class="wrap">
+      <h2 class="section-title">How we can help</h2>
+      <div class="track-grid primary">
+        <article class="track-card">
+          <h3>A mediator when things break down</h3>
+          <p>We help you and the trade look at the agreements, the work, and a resolution that can get the job moving again. Where a warranty exists, we can support that warranty work. We are not a court. We do not represent you as lawyers. We cannot promise that everyone will agree.</p>
+        </article>
+        <article class="track-card">
+          <h3>A clear plan to get unstuck</h3>
+          <p>We review the project, what went wrong, and what finishing honestly involves. The first look is on us. Before any paid work, we agree the scope and the fee in writing. If you want, we stay on as your person on site.</p>
+        </article>
+        <article class="track-card">
+          <h3>Money to finish the job</h3>
+          <p>Financing to complete the construction, secured against the property, may be available. Any financing is subject to assessment and to terms you agree in writing. Approval is not automatic, and we do not promise that funds will be offered.</p>
+        </article>
+        <article class="track-card">
+          <h3>Someone in your corner</h3>
+          <p>We do not take over your project. If a takeover or a buyout is on the table, we help you read the options and the proposals and seek fair terms. We cannot promise that the outcome will be fair.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section flush-top">
+    <div class="wrap">
+      <h2 class="section-title">More ways we can help</h2>
+      <div class="track-grid more">
+        <article class="track-card">
+          <h3>A written cost to complete</h3>
+          <p>An honest written cost for the work that is still left.</p>
+        </article>
+        <article class="track-card">
+          <h3>Replacing a builder or trade</h3>
+          <p>If someone has left, we can scope the remaining work, gather quotes, and help you choose who finishes. We cannot promise that the right trade will be free to start.</p>
+        </article>
+        <article class="track-card">
+          <h3>Permit status</h3>
+          <p>We review the permit file with the City of Ottawa and name the steps that are still required. We do not promise approval, and we do not promise that a date will be met.</p>
+        </article>
+        <article class="track-card">
+          <h3>New home warranty</h3>
+          <p>We help you identify and document concerns and prepare the submissions that fit your situation. What is covered, and the deadlines, depend on your home and your warranty. Not every concern is eligible, and a repair is not guaranteed.</p>
+        </article>
+        <article class="track-card">
+          <h3>Liens and holdbacks</h3>
+          <p>We organize the paperwork, tell you when a lawyer should look at it, and help you connect with a construction lawyer. We do not give legal opinions. We do not interpret legal deadlines. We do not resolve title or lien rights.</p>
+        </article>
+        <article class="track-card">
+          <h3>Adjudication</h3>
+          <p>We organize project records, payment documents, and evidence of the work done. We do not represent you, and we do not give legal advice.</p>
+        </article>
+        <article class="track-card">
+          <h3>Damage on site</h3>
+          <p>After a fire, a storm, a theft, or water damage, we document the condition and estimate the repair so you can speak with your insurer. We are not licensed adjusters, and we do not promise that a claim will be paid.</p>
+        </article>
+        <article class="track-card">
+          <h3>Power of sale</h3>
+          <p>We assess the work still to do and share building and cost information with you and with your lawyer or advisers. We do not promise when that information will be ready, and we do not advise on enforcement or the law.</p>
+        </article>
+        <article class="track-card">
+          <h3>Last steps to occupancy</h3>
+          <p>We coordinate the remaining work, the inspections, and the signoffs that lead toward occupancy. We do not guarantee a permit, and we do not guarantee a move in date.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <h2 class="section-title">For lenders</h2>
+      <p class="section-intro">Do you hold a stalled construction loan? We can review the work in place and the cost still left, so you can decide your next step. This review is not an appraisal, not a regulated certification, and not legal advice.</p>
+    </div>
+  </section>
+
+  <section class="section flush-top">
+    <div class="wrap">
+      <h2 class="section-title">How it works</h2>
+      <ol class="steps">
+        <li><h3>First look on us</h3><p>You tell us where things stand.</p></li>
+        <li><h3>A straight assessment</h3><p>We look at the work remaining and the likely costs.</p></li>
+        <li><h3>You choose the help</h3><p>Mediation, advice, financing, or support on the project.</p></li>
+        <li><h3>Agreed next steps</h3><p>We stay with you for that support. We do not guarantee that the build will be finished, and we do not guarantee a fair outcome.</p></li>
+      </ol>
+      <p class="section-intro follow">We only take on a project when we can see clearly what went wrong and what it will honestly take to finish.</p>
+      <p class="disclaimer">Blueprint Construction is not a home inspector, a lawyer, or an appraiser. When the work needs one of those people, we refer you to a qualified professional.</p>
+    </div>
+  </section>
+
+  <section class="cta-band">
+    <div class="wrap">
+      <h2>If your project has stopped, talk to us before your next move.</h2>
+      <p>Call Yves Eggleston.</p>
+      <a class="btn" href="{tel}">Call {phone}</a>
+      <p>Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
+    </div>
+  </section>
+</main>
+{footer(depth)}"""
+    return head(
+        depth=depth,
+        title=title,
+        description=description,
+        canonical_path="/back-on-track/",
+        og_image=images["beechwood-exterior"],
+    ) + f"\n<body>\n{body}\n</body>\n</html>\n"
+
+
 def render_home_redirect() -> str:
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -816,6 +965,7 @@ def sitemap(images: dict) -> str:
     pages = {
         "/": ["beechwood-living", "heritage-ncc", "beacon", "yves"],
         "/gallery/": [image_id for project in PROJECTS for image_id in project_photo_ids(project)],
+        "/back-on-track/": [],
         "/contact/": ["steel"],
     }
     urls = []
@@ -841,17 +991,13 @@ def write_favicon_copies() -> None:
 
 def check_output() -> None:
     banned = [
-        "613-262-2442",
-        "6132622442",
-        "+1613",
-        "tel:",
-        "yves@",
         "Make it stand out",
         "maps.google",
         "<form",
         "CNAME",
         "Whatever it is, the way you tell your story",
     ]
+    phone_terms = ["613-262-2442", "6132622442", "+1613", "tel:", "yves@"]
     html_files = list(OUT.rglob("*.html"))
     blob = "\n".join(path.read_text() for path in html_files)
     blob += (OUT / "sitemap.xml").read_text()
@@ -859,13 +1005,30 @@ def check_output() -> None:
     for term in banned:
         if term.lower() in blob.lower():
             raise SystemExit(f"Forbidden string in output: {term}")
+    for path in html_files:
+        text = path.read_text()
+        if path.parent.name == "back-on-track":
+            visible = re.sub(r"<script[\s\S]*?</script>", " ", text)
+            visible = re.sub(r"<style[\s\S]*?</style>", " ", visible)
+            visible = re.sub(r"<[^>]+>", " ", visible)
+            for mark in ("-", "–", "—"):
+                if mark in visible:
+                    raise SystemExit(f"visible dash in back on track copy: {mark}")
+            if "613 262 2442" not in visible or "yves@blueprintbuilds.com" not in visible:
+                raise SystemExit("back on track contact block is incomplete")
+            if "same day" in visible.lower():
+                raise SystemExit("back on track promises a timeline")
+            continue
+        for term in phone_terms:
+            if term.lower() in text.lower():
+                raise SystemExit(f"Forbidden string in {path}: {term}")
     sitemap_text = (OUT / "sitemap.xml").read_text()
     if "/home" in sitemap_text:
         raise SystemExit("sitemap lists /home")
     for required in (f"{ORIGIN}/<", f"{ORIGIN}/gallery/<", f"{ORIGIN}/contact/<"):
         # loc tags
         pass
-    for path in ("/", "/gallery/", "/contact/"):
+    for path in ("/", "/gallery/", "/back-on-track/", "/contact/"):
         if f"<loc>{ORIGIN}{path}</loc>" not in sitemap_text:
             raise SystemExit(f"sitemap missing {path}")
     titles = set()
@@ -959,6 +1122,9 @@ def main() -> None:
     contact = OUT / "contact"
     contact.mkdir(exist_ok=True)
     (contact / "index.html").write_text(render_contact(encoded))
+    track = OUT / "back-on-track"
+    track.mkdir(exist_ok=True)
+    (track / "index.html").write_text(render_back_on_track(encoded))
     home_redirect = OUT / "home"
     home_redirect.mkdir(exist_ok=True)
     (home_redirect / "index.html").write_text(render_home_redirect())
