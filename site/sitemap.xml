@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://blueprintottawa.com/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/beechwood-living-1500.jpg</image:loc>
       <image:title>Beechwood semi living room</image:title>
@@ -26,7 +26,7 @@
   </url>
   <url>
     <loc>https://blueprintottawa.com/gallery/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/hintonburg-1500.jpg</image:loc>
       <image:title>Rendering of a 10-unit low-rise in Hintonburg</image:title>
@@ -159,12 +159,107 @@
     </image:image>
   </url>
   <url>
+    <loc>https://blueprintottawa.com/gallery/rooftop-new-edinburgh/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rooftop-lounge-1500.jpg</image:loc>
+      <image:title>New Edinburgh rooftop lounge</image:title>
+      <image:caption>Rooftop lounge in New Edinburgh at dusk, with a fire pit, Adirondack chairs, a sofa, and a glazed pavilion.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rooftop-dining-1500.jpg</image:loc>
+      <image:title>New Edinburgh rooftop dining deck</image:title>
+      <image:caption>Rooftop dining deck in New Edinburgh at dusk, with string lights, a picnic table, lounge chairs, a hot tub, and a grill.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://blueprintottawa.com/gallery/semi-detach-beechwood/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-living-1500.jpg</image:loc>
+      <image:title>Beechwood semi living room</image:title>
+      <image:caption>Living and dining room in a Beechwood semi-detached home, with a light sofa, black chairs, a round coffee table, and a linear fireplace.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-exterior-1500.jpg</image:loc>
+      <image:title>Beechwood semi-detached homes at twilight</image:title>
+      <image:caption>Pair of modern semi-detached homes on Beechwood at twilight, with stone and stucco walls, lit windows, and garage doors in the snow.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-kitchen-1500.jpg</image:loc>
+      <image:title>Beechwood semi kitchen</image:title>
+      <image:caption>Kitchen in a Beechwood semi-detached home, with a walnut island, white counters, a wall oven, and three globe pendant lights.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-bath-1500.jpg</image:loc>
+      <image:title>Beechwood semi bathroom</image:title>
+      <image:caption>Bathroom in a Beechwood semi-detached home, with a freestanding tub, a wood vanity, and a walk-in shower.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/beechwood-stair-1500.jpg</image:loc>
+      <image:title>Beechwood semi staircase</image:title>
+      <image:caption>Light wood staircase with metal balusters in a Beechwood semi-detached home, looking through to the living room.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://blueprintottawa.com/gallery/commercial-orleans/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/orleans-exterior-1500.jpg</image:loc>
+      <image:title>Commercial plaza in Orléans</image:title>
+      <image:caption>Single-storey commercial plaza in Orléans with a pale facade, black awnings, and a landscaped parking edge, finished in 2018.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/orleans-reception-1500.jpg</image:loc>
+      <image:title>Orléans commercial reception</image:title>
+      <image:caption>Reception and waiting area in an Orléans commercial interior, with a grey desk, a blue chair, and a backlit spine panel.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/orleans-hall-1500.jpg</image:loc>
+      <image:title>Orléans commercial hallway</image:title>
+      <image:caption>Waiting area and hallway in an Orléans commercial interior, with blue chairs, grey partitions, and a wall-mounted screen.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://blueprintottawa.com/gallery/rideau-gardens/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rideau-living-1200.jpg</image:loc>
+      <image:title>Rideau Gardens addition living space</image:title>
+      <image:caption>Open living space in a Rideau Gardens addition, with wide hardwood floors and black-framed sliding doors to a deck, 2009.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rideau-stair-1200.jpg</image:loc>
+      <image:title>Rideau Gardens stair</image:title>
+      <image:caption>Open-riser staircase with wood treads and a black steel and glass rail in a Rideau Gardens home addition.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/rideau-loft-1200.jpg</image:loc>
+      <image:title>Rideau Gardens upper landing</image:title>
+      <image:caption>Upper landing in a Rideau Gardens addition, with a built-in desk under a large window and a glass guardrail.</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://blueprintottawa.com/gallery/residential-interior/</loc>
+    <lastmod>2026-11-09</lastmod>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/interior-kitchen-1500.jpg</image:loc>
+      <image:title>Residential kitchen with a stone island</image:title>
+      <image:caption>White residential kitchen with a stone waterfall island, double wall ovens, and slim pendant lights.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://blueprintottawa.com/assets/img/interior-living-1500.jpg</image:loc>
+      <image:title>Residential living room with a fireplace</image:title>
+      <image:caption>Unfurnished living room with pale wood floors, a stone fireplace wall, and sliding doors to a balcony.</image:caption>
+    </image:image>
+  </url>
+  <url>
     <loc>https://blueprintottawa.com/project-recovery/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
   </url>
   <url>
     <loc>https://blueprintottawa.com/contact/</loc>
-    <lastmod>2026-11-06</lastmod>
+    <lastmod>2026-11-09</lastmod>
     <image:image>
       <image:loc>https://blueprintottawa.com/assets/img/steel-1500.jpg</image:loc>
       <image:title>Building under construction in green sheathing</image:title>

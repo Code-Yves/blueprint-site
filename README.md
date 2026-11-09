@@ -8,8 +8,8 @@ The published site is the `site/` directory. `site/CNAME` names `blueprintottawa
 
 - `/` Home. Title: Blueprint Construction | Ottawa builder since 2005
 - `/gallery/` Projects, plus a page for each group of photographs that belong together
-- `/contact/` Email only, [info@blueprintbuilds.com](mailto:info@blueprintbuilds.com). No phone, street address, or form
-- `/home/` redirects to `/` and is omitted from the sitemap
+- `/contact/` Email only, [yves@blueprintbuilds.com](mailto:yves@blueprintbuilds.com). No phone, street address, or form
+- `/home/`, `/about/`, `/services/`, and `/blog/` redirect to `/`. `/contact-us/` redirects to `/contact/`. `/projects/` and `/portfolio/` redirect to `/gallery/`. These redirect pages are omitted from the sitemap. A request under `/blog/` is sent home by `404.html`; any other missing path stays a real 404.
 
 Navigation is Home, Projects, Contact.
 

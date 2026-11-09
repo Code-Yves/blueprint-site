@@ -25,10 +25,22 @@ OUT = ROOT / "site"
 IMG_OUT = OUT / "assets" / "img"
 
 ORIGIN = "https://blueprintottawa.com"
-EMAIL = "info@blueprintbuilds.com"
+EMAIL = "yves@blueprintbuilds.com"
 MAILTO = f"mailto:{EMAIL}"
 GA_ID = "UA-26098310-1"
 WIDTHS = (640, 960, 1500)
+LASTMOD = "2026-11-09"
+# Old Squarespace paths. Folder target is relative to /name/index.html.
+# File target is relative to /name.html. Canonical is the live page.
+REDIRECTS = [
+    ("about", "../", "./", "/"),
+    ("services", "../", "./", "/"),
+    ("blog", "../", "./", "/"),
+    ("home", "../", "./", "/"),
+    ("contact-us", "../contact/", "contact/", "/contact/"),
+    ("projects", "../gallery/", "gallery/", "/gallery/"),
+    ("portfolio", "../gallery/", "gallery/", "/gallery/"),
+]
 
 # Photos omitted on purpose:
 # 30 is a byte-identical copy of 25 (Castle Heights semi).
@@ -538,7 +550,7 @@ def cta() -> str:
     return f"""<section class="cta-band">
   <div class="wrap">
     <h2>Every successful project starts with an honest conversation.</h2>
-    <p>Let’s see if we’re the right fit. Write to <a class="mail" href="{MAILTO}">{EMAIL}</a>.</p>
+    <p>Let’s see if I’m the right fit. Write to <a class="mail" href="{MAILTO}">{EMAIL}</a>.</p>
     <a class="btn" href="{MAILTO}">Start a conversation</a>
   </div>
 </section>"""
@@ -547,8 +559,8 @@ def cta() -> str:
 def render_home(images: dict) -> str:
     title = "Blueprint Construction | Ottawa builder since 2005"
     description = (
-        "Open-book construction management in Ottawa. Fixed management fee, costs billed at cost, "
-        "budgets within 5%. Custom homes, multi-unit, and commercial — from design and permits to occupancy."
+        "Open book construction management in Ottawa. "
+        "Custom homes, multi-unit buildings, and commercial work, from design and permits to occupancy."
     )
     depth = 0
     mag = [
@@ -577,9 +589,9 @@ def render_home(images: dict) -> str:
     <div class="wrap">
       <p class="hero-kicker">Ottawa builder since 2005</p>
       <h1>Built on transparency. Driven by integrity.</h1>
-      <p class="hero-lead">Custom homes, multi-unit, and commercial — from design and permits through to occupancy. Open-book pricing. Fixed management fee.</p>
+      <p class="hero-lead">Custom homes, multi-unit, and commercial work, from design and permits through to occupancy.</p>
       <div class="btn-row">
-        <a class="btn" href="gallery/">See our work</a>
+        <a class="btn" href="gallery/">See my work</a>
         <a class="btn btn-ghost" href="{MAILTO}">Email Yves</a>
       </div>
     </div>
@@ -603,7 +615,7 @@ def render_home(images: dict) -> str:
         <h2 class="section-title">Hi, I’m Yves Eggleston</h2>
         <p>Whether it’s a custom home, a multi-unit building, or a commercial space, I can help you take your project from the design and permit stages all the way to occupancy.</p>
         <p>My journey in construction began in <strong>2005</strong>. I only take on a limited number of projects at a time and by staying small, I can focus on your project. I’m on-site in person to keep an eye on every detail, ensuring that the work happening behind the walls is just as solid as the work you see on the outside.</p>
-        <p>I believe in a fully open-book approach: a fixed management fee, and every receipt, discount, and quote shared with you directly. Everything is billed at cost. No hidden markups, no surprises.</p>
+        <p>I work in the open. I share receipts, discounts, and quotes with you directly. Costs are billed at cost, with no hidden markups.</p>
         <p>I’ve lived in Ottawa my whole life. I’m a proud husband and a father of two, and I treat every project with the same care I’d put into my own home.</p>
       </div>
     </div>
@@ -614,22 +626,22 @@ def render_home(images: dict) -> str:
       <p class="eyebrow">A reputation built on staying put</p>
       <h2 class="section-title">Twenty years of consistency.</h2>
       <div class="prose">
-        <p>I’m proud to say I’ve been doing this right since 2005. I’ve never walked away from a project or left a client hanging. I’ve never had to shut down only to reopen under a different name, and I’ve never been involved in litigation. I’ve had the same email address for over 20 years.</p>
-        <p>Construction isn’t always perfect, and not every project goes exactly to plan, but I will always stand by your side and get us to the finish line. Because of this, I’ve never had to do much advertising. You won’t see Blueprint signs on front lawns or find us on social media. I’ve always believed that if you do the right thing, word-of-mouth is the only marketing you need.</p>
+        <p>I have been building in Ottawa since 2005. I finish what I start. My record speaks for itself. When an issue comes up, I work to resolve it directly with owners. I have had the same email address for over 20 years.</p>
+        <p>Not every project goes exactly to plan. I stay with the work. Most of my work has come by word of mouth. Blueprint does not use lawn signs, and I am not on social media.</p>
       </div>
     </div>
   </section>
 
   <section class="section process">
     <div class="wrap">
-      <h2 class="section-title">How we work</h2>
+      <h2 class="section-title">How I work</h2>
       <p class="section-intro">An adaptable process — step in for a roadblock, or manage the whole job.</p>
       <ol>
         <li><h3>Feasibility</h3><p>Site, numbers, and what you actually want — before drawings that don’t fit the budget.</p></li>
         <li><h3>Design &amp; permits</h3><p>Steer drawings, engineering, and permits; flag what paper plans miss.</p></li>
-        <li><h3>A budget you can trust</h3><p>Trusted trade quotes near the end of design, then a clear final budget.</p></li>
+        <li><h3>A working budget</h3><p>Trade quotes near the end of design, then a final budget.</p></li>
         <li><h3>Build &amp; timeline</h3><p>Day-to-day site run: trades, inspections, suppliers, a timeline you can plan around.</p></li>
-        <li><h3>After-care</h3><p>Small issues show up after handover. We don’t disappear.</p></li>
+        <li><h3>After-care</h3><p>Small issues show up after handover. I stay available.</p></li>
         <li><h3>Financing</h3><p>Relationships with private lenders who have financed Blueprint jobs before.</p></li>
       </ol>
     </div>
@@ -749,7 +761,8 @@ def render_contact(images: dict) -> str:
     depth = 1
     title = "Contact | Blueprint Construction"
     description = (
-        "Talk with Yves Eggleston at Blueprint Construction. Email info@blueprintbuilds.com. "
+        "Talk with Yves Eggleston at Blueprint Construction. "
+        f"Email {EMAIL}. "
         "Open-book construction management in Ottawa since 2005."
     )
     body = f"""{chrome(depth, "contact")}
@@ -758,7 +771,7 @@ def render_contact(images: dict) -> str:
     <div class="wrap">
       <p class="hero-kicker">Contact</p>
       <h1>Honest advice. Solid foundations.</h1>
-      <p class="hero-lead">Let’s see if we’re the right fit. The only way to reach Blueprint is by email.</p>
+      <p class="hero-lead">Let’s see if I’m the right fit. The only way to reach Blueprint is by email.</p>
       <a class="btn" href="{MAILTO}">Email Yves</a>
     </div>
   </section>
@@ -790,20 +803,20 @@ def render_project_recovery(images: dict) -> str:
     title = "Project Recovery | Blueprint Construction"
     description = (
         "Project Recovery helps banks, investors, realtors, lawyers, and owners "
-        "managing their own builds in Ottawa. We help you understand where a project "
+        "managing their own builds in Ottawa. I help you understand where a project "
         "stands and what comes next. Call Yves Eggleston."
     )
     phone = "613 262 2442"
-    tel = "tel:+16132622442"
-    mail = "yves@blueprintbuilds.com"
+    tel = "tel:+16132624442"
+    mail = EMAIL
     body = f"""{chrome(depth, "track")}
 <main id="content">
   <section class="hero">
     <div class="wrap">
       <p class="hero-kicker">Project Recovery</p>
       <h1>Your project, back on track.</h1>
-      <p class="hero-audience">We work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.</p>
-      <p class="hero-lead">Whether a project has stalled or become more than you can manage, we help you understand where it stands and what comes next.</p>
+      <p class="hero-audience">I work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.</p>
+      <p class="hero-lead">Whether a project has stalled or become more than you can manage, I help you understand where it stands and what comes next.</p>
     </div>
   </section>
 
@@ -811,7 +824,7 @@ def render_project_recovery(images: dict) -> str:
     <div class="wrap">
       <p class="eyebrow">Who it is for</p>
       <h2 class="section-title">Banks, investors, realtors, lawyers, and owners.</h2>
-      <p class="section-intro">These are people in Ottawa managing a build who need help completing it. A project may have stalled, or it may have become more than you can manage. That is not a verdict on you. We look at what is in front of us and help you find a way forward.</p>
+      <p class="section-intro">These are people in Ottawa managing a build who need help completing it. A project may have stalled, or it may have become more than you can manage. That is not a verdict on you. I look at what is in front of me and help you find a way forward.</p>
       <ul class="plain-list">
         <li>Disputes over incomplete or poor trade work</li>
         <li>Permits that have stalled</li>
@@ -826,23 +839,23 @@ def render_project_recovery(images: dict) -> str:
 
   <section class="section flush-top">
     <div class="wrap">
-      <h2 class="section-title">How we can help</h2>
+      <h2 class="section-title">How I can help</h2>
       <div class="track-grid primary">
         <article class="track-card">
           <h3>A mediator when things break down</h3>
-          <p>We help you and the trade look at the agreements, the work, and a resolution that can get the job moving again. Where a warranty exists, we can support that warranty work. We are not a court. We do not represent you as lawyers. We cannot promise that everyone will agree.</p>
+          <p>I help you and the trade look at the agreements, the work, and a resolution that can get the job moving again. Where a warranty exists, I can support that warranty work. I am not a court. I do not represent you as a lawyer. I cannot promise that everyone will agree.</p>
         </article>
         <article class="track-card">
           <h3>A clear plan to get unstuck</h3>
-          <p>We review the project, what went wrong, and what finishing honestly involves. The first look is on us. Before any paid work, we agree the scope and the fee in writing. If you want, we stay on as your person on site.</p>
+          <p>I review the project, what went wrong, and what finishing honestly involves. The first look is on me. Before any paid work, I agree the scope and the fee in writing. If you want, I stay on as your person on site.</p>
         </article>
         <article class="track-card">
           <h3>Money to finish the job</h3>
-          <p>Financing to complete the construction, secured against the property, may be available. Any financing is subject to assessment and to terms you agree in writing. Approval is not automatic, and we do not promise that funds will be offered.</p>
+          <p>Financing to complete the construction, secured against the property, may be available. Any financing is subject to assessment and to terms you agree in writing. Approval is not automatic, and I do not promise that funds will be offered.</p>
         </article>
         <article class="track-card">
           <h3>Someone in your corner</h3>
-          <p>We do not take over your project. If a takeover or a buyout is on the table, we help you read the options and the proposals and seek fair terms. We cannot promise that the outcome will be fair.</p>
+          <p>I do not take over your project. If a takeover or a buyout is on the table, I help you read the options and the proposals and seek fair terms. I cannot promise that the outcome will be fair.</p>
         </article>
       </div>
     </div>
@@ -850,7 +863,7 @@ def render_project_recovery(images: dict) -> str:
 
   <section class="section flush-top">
     <div class="wrap">
-      <h2 class="section-title">More ways we can help</h2>
+      <h2 class="section-title">More ways I can help</h2>
       <div class="track-grid more">
         <article class="track-card">
           <h3>A written cost to complete</h3>
@@ -858,35 +871,35 @@ def render_project_recovery(images: dict) -> str:
         </article>
         <article class="track-card">
           <h3>Replacing a builder or trade</h3>
-          <p>If someone has left, we can scope the remaining work, gather quotes, and help you choose who finishes. We cannot promise that the right trade will be free to start.</p>
+          <p>If someone has left, I can scope the remaining work, gather quotes, and help you choose who finishes. I cannot promise that the right trade will be free to start.</p>
         </article>
         <article class="track-card">
           <h3>Permit status</h3>
-          <p>We review the permit file with the City of Ottawa and name the steps that are still required. We do not promise approval, and we do not promise that a date will be met.</p>
+          <p>I review the permit file with the City of Ottawa and name the steps that are still required. I do not promise approval, and I do not promise that a date will be met.</p>
         </article>
         <article class="track-card">
           <h3>New home warranty</h3>
-          <p>We help you identify and document concerns and prepare the submissions that fit your situation. What is covered, and the deadlines, depend on the home and the warranty. Not every concern is eligible, and a repair is not guaranteed.</p>
+          <p>I help you identify and document concerns and prepare the submissions that fit your situation. What is covered, and the deadlines, depend on the home and the warranty. Not every concern is eligible, and a repair is not guaranteed.</p>
         </article>
         <article class="track-card">
           <h3>Liens and holdbacks</h3>
-          <p>We organize the paperwork, tell you when a lawyer should look at it, and help you connect with a construction lawyer. We do not give legal opinions. We do not interpret legal deadlines. We do not resolve title or lien rights.</p>
+          <p>I organize the paperwork, tell you when a lawyer should look at it, and help you connect with a construction lawyer. I do not give legal opinions. I do not interpret legal deadlines. I do not resolve title or lien rights.</p>
         </article>
         <article class="track-card">
           <h3>Adjudication</h3>
-          <p>We organize project records, payment documents, and evidence of the work done. We do not represent you, and we do not give legal advice.</p>
+          <p>I organize project records, payment documents, and evidence of the work done. I do not represent you, and I do not give legal advice.</p>
         </article>
         <article class="track-card">
           <h3>Damage on site</h3>
-          <p>After a fire, a storm, a theft, or water damage, we document the condition and estimate the repair so you can speak with the insurer. We are not licensed adjusters, and we do not promise that a claim will be paid.</p>
+          <p>After a fire, a storm, a theft, or water damage, I document the condition and estimate the repair so you can speak with the insurer. I am not a licensed adjuster, and I do not promise that a claim will be paid.</p>
         </article>
         <article class="track-card">
           <h3>Power of sale</h3>
-          <p>We assess the work still to do and share building and cost information with you and with the lawyer or advisers on the file. We do not promise when that information will be ready, and we do not advise on enforcement or the law.</p>
+          <p>I assess the work still to do and share building and cost information with you and with the lawyer or advisers on the file. I do not promise when that information will be ready, and I do not advise on enforcement or the law.</p>
         </article>
         <article class="track-card">
           <h3>Last steps to occupancy</h3>
-          <p>We coordinate the remaining work, the inspections, and the signoffs that lead toward occupancy. We do not guarantee a permit, and we do not guarantee a move in date.</p>
+          <p>I coordinate the remaining work, the inspections, and the signoffs that lead toward occupancy. I do not guarantee a permit, and I do not guarantee a move in date.</p>
         </article>
       </div>
     </div>
@@ -895,7 +908,7 @@ def render_project_recovery(images: dict) -> str:
   <section class="section">
     <div class="wrap">
       <h2 class="section-title">For banks and other lenders</h2>
-      <p class="section-intro">Do you hold a stalled construction loan? We can review the work in place and the cost still left, so you can decide your next step. This review is not an appraisal, not a regulated certification, and not legal advice.</p>
+      <p class="section-intro">Do you hold a stalled construction loan? I can review the work in place and the cost still left, so you can decide your next step. This review is not an appraisal, not a regulated certification, and not legal advice.</p>
     </div>
   </section>
 
@@ -903,19 +916,19 @@ def render_project_recovery(images: dict) -> str:
     <div class="wrap">
       <h2 class="section-title">How it works</h2>
       <ol class="steps">
-        <li><h3>First look on us</h3><p>You tell us where things stand.</p></li>
-        <li><h3>A straight assessment</h3><p>We look at the work remaining and the likely costs.</p></li>
+        <li><h3>First look on me</h3><p>You tell me where things stand.</p></li>
+        <li><h3>A straight assessment</h3><p>I look at the work remaining and the likely costs.</p></li>
         <li><h3>You choose the help</h3><p>Mediation, advice, financing, or support on the project.</p></li>
-        <li><h3>Agreed next steps</h3><p>We stay with you for that support. We do not guarantee that the build will be finished, and we do not guarantee a fair outcome.</p></li>
+        <li><h3>Agreed next steps</h3><p>I stay with you for that support. I do not guarantee that the build will be finished, and I do not guarantee a fair outcome.</p></li>
       </ol>
-      <p class="section-intro follow">We only take on a project when we can see clearly what went wrong and what it will honestly take to finish.</p>
-      <p class="disclaimer">Blueprint Construction is not a home inspector, a lawyer, or an appraiser. When the work needs one of those people, we refer you to a qualified professional.</p>
+      <p class="section-intro follow">I only take on a project when I can see clearly what went wrong and what it will honestly take to finish.</p>
+      <p class="disclaimer">Blueprint Construction is not a home inspector, a lawyer, or an appraiser. When the work needs one of those people, I refer you to a qualified professional.</p>
     </div>
   </section>
 
   <section class="cta-band">
     <div class="wrap">
-      <h2>If a project has stalled or become more than you can manage, talk to us before the next move.</h2>
+      <h2>If a project has stalled or become more than you can manage, talk to me before the next move.</h2>
       <p>Call Yves Eggleston.</p>
       <a class="btn" href="{tel}">Call {phone}</a>
       <p>Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
@@ -932,20 +945,66 @@ def render_project_recovery(images: dict) -> str:
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
 
-def render_home_redirect() -> str:
+def render_redirect(target: str, canonical_path: str, depth: int) -> str:
+    href = esc(target)
+    js_target = target.replace("\\", "\\\\").replace('"', '\\"')
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blueprint Construction | Ottawa builder since 2005</title>
-<link rel="canonical" href="{ORIGIN}/">
+<title>Blueprint Construction</title>
+<link rel="canonical" href="{ORIGIN}{canonical_path}">
 <meta name="robots" content="noindex, follow">
-<meta http-equiv="refresh" content="0; url=../">
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta http-equiv="refresh" content="0; url={href}">
+<script>location.replace("{js_target}");</script>
+<link rel="icon" href="{asset(depth, "favicon.svg")}" type="image/svg+xml">
 </head>
 <body>
-<p><a href="../">Blueprint Construction</a></p>
+<p>This page has moved. <a href="{href}">Continue to Blueprint Construction</a>.</p>
+</body>
+</html>
+"""
+
+
+def render_not_found() -> str:
+    # GitHub Pages serves this file for unknown URLs and keeps the requested path.
+    # Only old /blog/ posts redirect. Every other missing path stays a real 404.
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Blueprint Construction</title>
+<link rel="canonical" href="{ORIGIN}/404.html">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/styles.css">
+<script>
+(function () {{
+  var path = location.pathname;
+  var mark = "/blog/";
+  var at = path.indexOf(mark);
+  if (at === -1) return;
+  if (at !== 0 && path.slice(0, at).split("/").filter(Boolean).length !== 1) return;
+  var root = path.slice(0, at);
+  location.replace(root ? root + "/" : "/");
+}})();
+</script>
+</head>
+<body>
+{chrome(0, "")}
+<main id="content">
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-kicker">404</p>
+      <h1>Page not found</h1>
+      <p class="hero-lead">That page is not on this site.</p>
+      <a class="btn" href="./">Back to the homepage</a>
+    </div>
+  </section>
+</main>
+{footer(0)}
 </body>
 </html>
 """
@@ -963,15 +1022,23 @@ def sitemap(images: dict) -> str:
             "    </image:image>\n"
         )
 
-    pages = {
-        "/": ["beechwood-living", "heritage-ncc", "beacon", "yves"],
-        "/gallery/": [image_id for project in PROJECTS for image_id in project_photo_ids(project)],
-        "/project-recovery/": [],
-        "/contact/": ["steel"],
-    }
+    pages = [
+        ("/", ["beechwood-living", "heritage-ncc", "beacon", "yves"]),
+        ("/gallery/", [image_id for project in PROJECTS for image_id in project_photo_ids(project)]),
+    ]
+    for project in PROJECTS:
+        if not project["slug"]:
+            continue
+        pages.append((f'/gallery/{project["slug"]}/', project_photo_ids(project)))
+    pages.extend(
+        [
+            ("/project-recovery/", []),
+            ("/contact/", ["steel"]),
+        ]
+    )
     urls = []
-    for path, ids in pages.items():
-        block = [f"  <url>\n    <loc>{ORIGIN}{path}</loc>\n    <lastmod>2026-11-06</lastmod>\n"]
+    for path, ids in pages:
+        block = [f"  <url>\n    <loc>{ORIGIN}{path}</loc>\n    <lastmod>{LASTMOD}</lastmod>\n"]
         for image_id in ids:
             block.append(image_xml(image_id))
         block.append("  </url>")
@@ -998,7 +1065,7 @@ def check_output() -> None:
         "CNAME",
         "Whatever it is, the way you tell your story",
     ]
-    phone_terms = ["613-262-2442", "6132622442", "+1613", "tel:", "yves@"]
+    phone_terms = ["613-262-2442", "6132622442", "+1613", "tel:"]
     html_files = list(OUT.rglob("*.html"))
     blob = "\n".join(path.read_text() for path in html_files)
     blob += (OUT / "sitemap.xml").read_text()
@@ -1006,6 +1073,22 @@ def check_output() -> None:
     for term in banned:
         if term.lower() in blob.lower():
             raise SystemExit(f"Forbidden string in output: {term}")
+    if "info@" in blob.lower():
+        raise SystemExit("old info@ address is still in the shipped site")
+    for path in html_files:
+        for href in re.findall(r'href="mailto:([^"]*)"', path.read_text()):
+            address = href.split("?", 1)[0]
+            if address != EMAIL:
+                raise SystemExit(f"mailto is not {EMAIL} in {path}: {href}")
+    plural = re.compile(r"\b(we|we're|we’re|our|ours|us)\b", re.I)
+    for path in html_files:
+        visible = path.read_text()
+        visible = re.sub(r"<script[\s\S]*?</script>", " ", visible)
+        visible = re.sub(r"<style[\s\S]*?</style>", " ", visible)
+        visible = re.sub(r"<[^>]+>", " ", visible)
+        match = plural.search(visible)
+        if match:
+            raise SystemExit(f"plural voice in {path}: {match.group(0)}")
     for path in html_files:
         text = path.read_text()
         if path.parent.name == "project-recovery":
@@ -1025,8 +1108,8 @@ def check_output() -> None:
                 raise SystemExit("judgmental phrasing in project recovery copy")
             for phrase in (
                 "Your project, back on track.",
-                "We work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.",
-                "Whether a project has stalled or become more than you can manage, we help you understand where it stands and what comes next.",
+                "I work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.",
+                "Whether a project has stalled or become more than you can manage, I help you understand where it stands and what comes next.",
             ):
                 if phrase not in visible:
                     raise SystemExit(f"project recovery missing: {phrase}")
@@ -1037,21 +1120,49 @@ def check_output() -> None:
             if term.lower() in text.lower():
                 raise SystemExit(f"Forbidden string in {path}: {term}")
     sitemap_text = (OUT / "sitemap.xml").read_text()
-    if "/home" in sitemap_text:
-        raise SystemExit("sitemap lists /home")
-    for required in (f"{ORIGIN}/<", f"{ORIGIN}/gallery/<", f"{ORIGIN}/contact/<"):
-        # loc tags
-        pass
+    for name, _folder_target, _file_target, _canonical in REDIRECTS:
+        if f"{ORIGIN}/{name}" in sitemap_text:
+            raise SystemExit(f"sitemap lists redirect /{name}")
+    if f"{ORIGIN}/404" in sitemap_text:
+        raise SystemExit("sitemap lists 404")
     for path in ("/", "/gallery/", "/project-recovery/", "/contact/"):
         if f"<loc>{ORIGIN}{path}</loc>" not in sitemap_text:
             raise SystemExit(f"sitemap missing {path}")
+    for project in PROJECTS:
+        if not project["slug"]:
+            continue
+        loc = f'{ORIGIN}/gallery/{project["slug"]}/'
+        if f"<loc>{loc}</loc>" not in sitemap_text:
+            raise SystemExit(f"sitemap missing {loc}")
+    if sitemap_text.count("<lastmod>") != sitemap_text.count(f"<lastmod>{LASTMOD}</lastmod>"):
+        raise SystemExit("sitemap lastmod is not the content date")
+    for name, folder_target, file_target, canonical_path in REDIRECTS:
+        for rel, target in ((f"{name}/index.html", folder_target), (f"{name}.html", file_target)):
+            text = (OUT / rel).read_text()
+            expected = [
+                f'content="0; url={target}"',
+                f'location.replace("{target}")',
+                f'<link rel="canonical" href="{ORIGIN}{canonical_path}">',
+                f'<a href="{target}">',
+                "noindex",
+            ]
+            for piece in expected:
+                if piece not in text:
+                    raise SystemExit(f"redirect {rel} missing {piece}")
+    not_found = (OUT / "404.html").read_text()
+    if 'http-equiv="refresh"' in not_found or "Page not found" not in not_found:
+        raise SystemExit("404 page is not a real not found page")
+    if "/blog/" not in not_found or "location.replace" not in not_found:
+        raise SystemExit("404 page does not redirect old blog posts")
     titles = set()
     descriptions = set()
     for path in html_files:
         text = path.read_text()
         if 'rel="canonical"' not in text:
             raise SystemExit(f"missing canonical: {path}")
-        if path.name == "index.html" and path.parent.name == "home":
+        if 'http-equiv="refresh"' in text or path.name == "404.html":
+            if "noindex" not in text:
+                raise SystemExit(f"missing noindex: {path}")
             continue
         if "name=\"description\"" not in text:
             raise SystemExit(f"missing description: {path}")
@@ -1070,6 +1181,31 @@ def check_output() -> None:
     home = (OUT / "index.html").read_text()
     if "<title>Blueprint Construction | Ottawa builder since 2005</title>" not in home:
         raise SystemExit("home title mismatch")
+    if f'"email":"{EMAIL}"' not in home:
+        raise SystemExit("home json-ld email mismatch")
+    for phrase in (
+        "I finish what I start.",
+        "My record speaks for itself.",
+        "I work to resolve it directly with owners.",
+        "Costs are billed at cost, with no hidden markups.",
+    ):
+        if phrase not in home:
+            raise SystemExit(f"home missing softened claim: {phrase}")
+    for phrase in (
+        "within 5%",
+        "never walked",
+        "never been involved",
+        "never had to shut",
+        "i will always",
+        "i've always",
+        "i’ve always",
+        "fixed management fee",
+        "management fee",
+        "open-book pricing",
+        "budgets within",
+    ):
+        if phrase in home.lower():
+            raise SystemExit(f"absolute claim still on home: {phrase}")
     gallery = (OUT / "gallery" / "index.html").read_text()
     if "View project" in gallery:
         raise SystemExit("gallery still links out with View project")
@@ -1139,9 +1275,12 @@ def main() -> None:
     track = OUT / "project-recovery"
     track.mkdir(exist_ok=True)
     (track / "index.html").write_text(render_project_recovery(encoded))
-    home_redirect = OUT / "home"
-    home_redirect.mkdir(exist_ok=True)
-    (home_redirect / "index.html").write_text(render_home_redirect())
+    for name, folder_target, file_target, canonical_path in REDIRECTS:
+        folder = OUT / name
+        folder.mkdir(exist_ok=True)
+        (folder / "index.html").write_text(render_redirect(folder_target, canonical_path, 1))
+        (OUT / f"{name}.html").write_text(render_redirect(file_target, canonical_path, 0))
+    (OUT / "404.html").write_text(render_not_found())
     (OUT / "sitemap.xml").write_text(sitemap(encoded))
     (OUT / "robots.txt").write_text(
         "User-agent: *\nAllow: /\n\nSitemap: https://blueprintottawa.com/sitemap.xml\n"
