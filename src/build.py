@@ -25,10 +25,22 @@ OUT = ROOT / "site"
 IMG_OUT = OUT / "assets" / "img"
 
 ORIGIN = "https://blueprintottawa.com"
-EMAIL = "info@blueprintbuilds.com"
+EMAIL = "yves@blueprintbuilds.com"
 MAILTO = f"mailto:{EMAIL}"
 GA_ID = "UA-26098310-1"
 WIDTHS = (640, 960, 1500)
+LASTMOD = "2026-11-09"
+# Old Squarespace paths. Folder target is relative to /name/index.html.
+# File target is relative to /name.html. Canonical is the live page.
+REDIRECTS = [
+    ("about", "../", "./", "/"),
+    ("services", "../", "./", "/"),
+    ("blog", "../", "./", "/"),
+    ("home", "../", "./", "/"),
+    ("contact-us", "../contact/", "contact/", "/contact/"),
+    ("projects", "../gallery/", "gallery/", "/gallery/"),
+    ("portfolio", "../gallery/", "gallery/", "/gallery/"),
+]
 
 # Photos omitted on purpose:
 # 30 is a byte-identical copy of 25 (Castle Heights semi).
@@ -547,8 +559,8 @@ def cta() -> str:
 def render_home(images: dict) -> str:
     title = "Blueprint Construction | Ottawa builder since 2005"
     description = (
-        "Open-book construction management in Ottawa. Fixed management fee, costs billed at cost, "
-        "budgets within 5%. Custom homes, multi-unit, and commercial — from design and permits to occupancy."
+        "Open book construction management in Ottawa. "
+        "Custom homes, multi-unit buildings, and commercial work, from design and permits to occupancy."
     )
     depth = 0
     mag = [
@@ -577,7 +589,7 @@ def render_home(images: dict) -> str:
     <div class="wrap">
       <p class="hero-kicker">Ottawa builder since 2005</p>
       <h1>Built on transparency. Driven by integrity.</h1>
-      <p class="hero-lead">Custom homes, multi-unit, and commercial — from design and permits through to occupancy. Open-book pricing. Fixed management fee.</p>
+      <p class="hero-lead">Custom homes, multi-unit, and commercial work, from design and permits through to occupancy.</p>
       <div class="btn-row">
         <a class="btn" href="gallery/">See our work</a>
         <a class="btn btn-ghost" href="{MAILTO}">Email Yves</a>
@@ -603,7 +615,7 @@ def render_home(images: dict) -> str:
         <h2 class="section-title">Hi, I’m Yves Eggleston</h2>
         <p>Whether it’s a custom home, a multi-unit building, or a commercial space, I can help you take your project from the design and permit stages all the way to occupancy.</p>
         <p>My journey in construction began in <strong>2005</strong>. I only take on a limited number of projects at a time and by staying small, I can focus on your project. I’m on-site in person to keep an eye on every detail, ensuring that the work happening behind the walls is just as solid as the work you see on the outside.</p>
-        <p>I believe in a fully open-book approach: a fixed management fee, and every receipt, discount, and quote shared with you directly. Everything is billed at cost. No hidden markups, no surprises.</p>
+        <p>I work in the open. Receipts, discounts, and quotes are shared with you directly.</p>
         <p>I’ve lived in Ottawa my whole life. I’m a proud husband and a father of two, and I treat every project with the same care I’d put into my own home.</p>
       </div>
     </div>
@@ -614,8 +626,8 @@ def render_home(images: dict) -> str:
       <p class="eyebrow">A reputation built on staying put</p>
       <h2 class="section-title">Twenty years of consistency.</h2>
       <div class="prose">
-        <p>I’m proud to say I’ve been doing this right since 2005. I’ve never walked away from a project or left a client hanging. I’ve never had to shut down only to reopen under a different name, and I’ve never been involved in litigation. I’ve had the same email address for over 20 years.</p>
-        <p>Construction isn’t always perfect, and not every project goes exactly to plan, but I will always stand by your side and get us to the finish line. Because of this, I’ve never had to do much advertising. You won’t see Blueprint signs on front lawns or find us on social media. I’ve always believed that if you do the right thing, word-of-mouth is the only marketing you need.</p>
+        <p>I have been building in Ottawa since 2005. We finish what we start. Our record speaks for itself. When an issue comes up, we work to resolve it directly with owners. I have had the same email address for over 20 years.</p>
+        <p>Not every project goes exactly to plan. We stay with the work. Most of our work has come by word of mouth. Blueprint does not use lawn signs, and we are not on social media.</p>
       </div>
     </div>
   </section>
@@ -627,9 +639,9 @@ def render_home(images: dict) -> str:
       <ol>
         <li><h3>Feasibility</h3><p>Site, numbers, and what you actually want — before drawings that don’t fit the budget.</p></li>
         <li><h3>Design &amp; permits</h3><p>Steer drawings, engineering, and permits; flag what paper plans miss.</p></li>
-        <li><h3>A budget you can trust</h3><p>Trusted trade quotes near the end of design, then a clear final budget.</p></li>
+        <li><h3>A working budget</h3><p>Trade quotes near the end of design, then a final budget.</p></li>
         <li><h3>Build &amp; timeline</h3><p>Day-to-day site run: trades, inspections, suppliers, a timeline you can plan around.</p></li>
-        <li><h3>After-care</h3><p>Small issues show up after handover. We don’t disappear.</p></li>
+        <li><h3>After-care</h3><p>Small issues show up after handover. We stay available.</p></li>
         <li><h3>Financing</h3><p>Relationships with private lenders who have financed Blueprint jobs before.</p></li>
       </ol>
     </div>
@@ -749,7 +761,8 @@ def render_contact(images: dict) -> str:
     depth = 1
     title = "Contact | Blueprint Construction"
     description = (
-        "Talk with Yves Eggleston at Blueprint Construction. Email info@blueprintbuilds.com. "
+        "Talk with Yves Eggleston at Blueprint Construction. "
+        f"Email {EMAIL}. "
         "Open-book construction management in Ottawa since 2005."
     )
     body = f"""{chrome(depth, "contact")}
@@ -794,8 +807,8 @@ def render_project_recovery(images: dict) -> str:
         "stands and what comes next. Call Yves Eggleston."
     )
     phone = "613 262 2442"
-    tel = "tel:+16132622442"
-    mail = "yves@blueprintbuilds.com"
+    tel = "tel:+16132624442"
+    mail = EMAIL
     body = f"""{chrome(depth, "track")}
 <main id="content">
   <section class="hero">
@@ -932,20 +945,66 @@ def render_project_recovery(images: dict) -> str:
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
 
-def render_home_redirect() -> str:
+def render_redirect(target: str, canonical_path: str, depth: int) -> str:
+    href = esc(target)
+    js_target = target.replace("\\", "\\\\").replace('"', '\\"')
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Blueprint Construction | Ottawa builder since 2005</title>
-<link rel="canonical" href="{ORIGIN}/">
+<title>Blueprint Construction</title>
+<link rel="canonical" href="{ORIGIN}{canonical_path}">
 <meta name="robots" content="noindex, follow">
-<meta http-equiv="refresh" content="0; url=../">
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta http-equiv="refresh" content="0; url={href}">
+<script>location.replace("{js_target}");</script>
+<link rel="icon" href="{asset(depth, "favicon.svg")}" type="image/svg+xml">
 </head>
 <body>
-<p><a href="../">Blueprint Construction</a></p>
+<p>This page has moved. <a href="{href}">Continue to Blueprint Construction</a>.</p>
+</body>
+</html>
+"""
+
+
+def render_not_found() -> str:
+    # GitHub Pages serves this file for unknown URLs and keeps the requested path.
+    # Only old /blog/ posts redirect. Every other missing path stays a real 404.
+    return f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Blueprint Construction</title>
+<link rel="canonical" href="{ORIGIN}/404.html">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/styles.css">
+<script>
+(function () {{
+  var path = location.pathname;
+  var mark = "/blog/";
+  var at = path.indexOf(mark);
+  if (at === -1) return;
+  if (at !== 0 && path.slice(0, at).split("/").filter(Boolean).length !== 1) return;
+  var root = path.slice(0, at);
+  location.replace(root ? root + "/" : "/");
+}})();
+</script>
+</head>
+<body>
+{chrome(0, "")}
+<main id="content">
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-kicker">404</p>
+      <h1>Page not found</h1>
+      <p class="hero-lead">That page is not on this site.</p>
+      <a class="btn" href="./">Back to the homepage</a>
+    </div>
+  </section>
+</main>
+{footer(0)}
 </body>
 </html>
 """
@@ -963,15 +1022,23 @@ def sitemap(images: dict) -> str:
             "    </image:image>\n"
         )
 
-    pages = {
-        "/": ["beechwood-living", "heritage-ncc", "beacon", "yves"],
-        "/gallery/": [image_id for project in PROJECTS for image_id in project_photo_ids(project)],
-        "/project-recovery/": [],
-        "/contact/": ["steel"],
-    }
+    pages = [
+        ("/", ["beechwood-living", "heritage-ncc", "beacon", "yves"]),
+        ("/gallery/", [image_id for project in PROJECTS for image_id in project_photo_ids(project)]),
+    ]
+    for project in PROJECTS:
+        if not project["slug"]:
+            continue
+        pages.append((f'/gallery/{project["slug"]}/', project_photo_ids(project)))
+    pages.extend(
+        [
+            ("/project-recovery/", []),
+            ("/contact/", ["steel"]),
+        ]
+    )
     urls = []
-    for path, ids in pages.items():
-        block = [f"  <url>\n    <loc>{ORIGIN}{path}</loc>\n    <lastmod>2026-11-06</lastmod>\n"]
+    for path, ids in pages:
+        block = [f"  <url>\n    <loc>{ORIGIN}{path}</loc>\n    <lastmod>{LASTMOD}</lastmod>\n"]
         for image_id in ids:
             block.append(image_xml(image_id))
         block.append("  </url>")
@@ -998,7 +1065,7 @@ def check_output() -> None:
         "CNAME",
         "Whatever it is, the way you tell your story",
     ]
-    phone_terms = ["613-262-2442", "6132622442", "+1613", "tel:", "yves@"]
+    phone_terms = ["613-262-2442", "6132622442", "+1613", "tel:"]
     html_files = list(OUT.rglob("*.html"))
     blob = "\n".join(path.read_text() for path in html_files)
     blob += (OUT / "sitemap.xml").read_text()
@@ -1006,6 +1073,13 @@ def check_output() -> None:
     for term in banned:
         if term.lower() in blob.lower():
             raise SystemExit(f"Forbidden string in output: {term}")
+    if "info@" in blob.lower():
+        raise SystemExit("old info@ address is still in the shipped site")
+    for path in html_files:
+        for href in re.findall(r'href="mailto:([^"]*)"', path.read_text()):
+            address = href.split("?", 1)[0]
+            if address != EMAIL:
+                raise SystemExit(f"mailto is not {EMAIL} in {path}: {href}")
     for path in html_files:
         text = path.read_text()
         if path.parent.name == "project-recovery":
@@ -1037,21 +1111,49 @@ def check_output() -> None:
             if term.lower() in text.lower():
                 raise SystemExit(f"Forbidden string in {path}: {term}")
     sitemap_text = (OUT / "sitemap.xml").read_text()
-    if "/home" in sitemap_text:
-        raise SystemExit("sitemap lists /home")
-    for required in (f"{ORIGIN}/<", f"{ORIGIN}/gallery/<", f"{ORIGIN}/contact/<"):
-        # loc tags
-        pass
+    for name, _folder_target, _file_target, _canonical in REDIRECTS:
+        if f"{ORIGIN}/{name}" in sitemap_text:
+            raise SystemExit(f"sitemap lists redirect /{name}")
+    if f"{ORIGIN}/404" in sitemap_text:
+        raise SystemExit("sitemap lists 404")
     for path in ("/", "/gallery/", "/project-recovery/", "/contact/"):
         if f"<loc>{ORIGIN}{path}</loc>" not in sitemap_text:
             raise SystemExit(f"sitemap missing {path}")
+    for project in PROJECTS:
+        if not project["slug"]:
+            continue
+        loc = f'{ORIGIN}/gallery/{project["slug"]}/'
+        if f"<loc>{loc}</loc>" not in sitemap_text:
+            raise SystemExit(f"sitemap missing {loc}")
+    if sitemap_text.count("<lastmod>") != sitemap_text.count(f"<lastmod>{LASTMOD}</lastmod>"):
+        raise SystemExit("sitemap lastmod is not the content date")
+    for name, folder_target, file_target, canonical_path in REDIRECTS:
+        for rel, target in ((f"{name}/index.html", folder_target), (f"{name}.html", file_target)):
+            text = (OUT / rel).read_text()
+            expected = [
+                f'content="0; url={target}"',
+                f'location.replace("{target}")',
+                f'<link rel="canonical" href="{ORIGIN}{canonical_path}">',
+                f'<a href="{target}">',
+                "noindex",
+            ]
+            for piece in expected:
+                if piece not in text:
+                    raise SystemExit(f"redirect {rel} missing {piece}")
+    not_found = (OUT / "404.html").read_text()
+    if 'http-equiv="refresh"' in not_found or "Page not found" not in not_found:
+        raise SystemExit("404 page is not a real not found page")
+    if "/blog/" not in not_found or "location.replace" not in not_found:
+        raise SystemExit("404 page does not redirect old blog posts")
     titles = set()
     descriptions = set()
     for path in html_files:
         text = path.read_text()
         if 'rel="canonical"' not in text:
             raise SystemExit(f"missing canonical: {path}")
-        if path.name == "index.html" and path.parent.name == "home":
+        if 'http-equiv="refresh"' in text or path.name == "404.html":
+            if "noindex" not in text:
+                raise SystemExit(f"missing noindex: {path}")
             continue
         if "name=\"description\"" not in text:
             raise SystemExit(f"missing description: {path}")
@@ -1070,6 +1172,30 @@ def check_output() -> None:
     home = (OUT / "index.html").read_text()
     if "<title>Blueprint Construction | Ottawa builder since 2005</title>" not in home:
         raise SystemExit("home title mismatch")
+    if f'"email":"{EMAIL}"' not in home:
+        raise SystemExit("home json-ld email mismatch")
+    for phrase in (
+        "We finish what we start.",
+        "Our record speaks for itself.",
+        "we work to resolve it directly with owners.",
+    ):
+        if phrase not in home:
+            raise SystemExit(f"home missing softened claim: {phrase}")
+    for phrase in (
+        "within 5%",
+        "never walked",
+        "never been involved",
+        "never had to shut",
+        "i will always",
+        "i've always",
+        "i’ve always",
+        "fixed management fee",
+        "open-book pricing",
+        "no hidden markups",
+        "budgets within",
+    ):
+        if phrase in home.lower():
+            raise SystemExit(f"absolute claim still on home: {phrase}")
     gallery = (OUT / "gallery" / "index.html").read_text()
     if "View project" in gallery:
         raise SystemExit("gallery still links out with View project")
@@ -1139,9 +1265,12 @@ def main() -> None:
     track = OUT / "project-recovery"
     track.mkdir(exist_ok=True)
     (track / "index.html").write_text(render_project_recovery(encoded))
-    home_redirect = OUT / "home"
-    home_redirect.mkdir(exist_ok=True)
-    (home_redirect / "index.html").write_text(render_home_redirect())
+    for name, folder_target, file_target, canonical_path in REDIRECTS:
+        folder = OUT / name
+        folder.mkdir(exist_ok=True)
+        (folder / "index.html").write_text(render_redirect(folder_target, canonical_path, 1))
+        (OUT / f"{name}.html").write_text(render_redirect(file_target, canonical_path, 0))
+    (OUT / "404.html").write_text(render_not_found())
     (OUT / "sitemap.xml").write_text(sitemap(encoded))
     (OUT / "robots.txt").write_text(
         "User-agent: *\nAllow: /\n\nSitemap: https://blueprintottawa.com/sitemap.xml\n"

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page not found | Blueprint Construction</title>
+<link rel="canonical" href="https://blueprintottawa.com/404.html">
+<meta name="robots" content="noindex, follow">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/styles.css">
+<script>
+(function () {
+  var path = location.pathname;
+  var mark = "/blog/";
+  var at = path.indexOf(mark);
+  if (at === -1) return;
+  if (at !== 0 && path.slice(0, at).split("/").filter(Boolean).length !== 1) return;
+  var root = path.slice(0, at);
+  location.replace(root ? root + "/" : "/");
+})();
+</script>
+</head>
+<body>
+<a class="skip" href="#content">Skip to content</a>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <a class="logo" href="./"><img src="assets/logo.png" alt="Blueprint Construction Services" width="773" height="302"></a>
+    <nav class="nav" aria-label="Primary">
+      <a href="./">Home</a>
+      <a href="gallery/">Projects</a>
+      <a href="project-recovery/">Project Recovery</a>
+      <a href="contact/">Contact</a>
+    </nav>
+  </div>
+</header>
+<main id="content">
+  <section class="hero">
+    <div class="wrap">
+      <p class="hero-kicker">404</p>
+      <h1>Page not found</h1>
+      <p class="hero-lead">That page is not on this site.</p>
+      <a class="btn" href="./">Back to the homepage</a>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="wrap site-footer">
+    <div>Blueprint Construction Services · Ottawa builder since 2005</div>
+    <div><a href="mailto:yves@blueprintbuilds.com">yves@blueprintbuilds.com</a></div>
+  </div>
+</footer>
+</body>
+</html>
