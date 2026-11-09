@@ -236,7 +236,7 @@ PROJECTS = [
         "note": "A pair of semis on Beechwood, from the envelope through the interiors.",
         "cover": "beechwood-exterior",
         "kicker": "Residential · Ottawa · 2022",
-        "lede": "A pair of thoughtfully finished semis on Beechwood — solid envelope, refined interiors, and the day-to-day site oversight that keeps a neighbourhood build on track.",
+        "lede": "A pair of thoughtfully finished semis on Beechwood: solid envelope, refined interiors, and the day-to-day site oversight that keeps a neighbourhood build on track.",
         "description": "Semi-detached homes on Beechwood, Ottawa, built by Blueprint Construction in 2022. Exterior, living room, kitchen, bathroom, and stair.",
         "images": [
             ("beechwood-living", "wide"),
@@ -476,12 +476,27 @@ def chrome(depth: int, current: str) -> str:
 
 
 def footer(depth: int) -> str:
-    return f"""<footer>
-  <div class="wrap site-footer">
-    <div>Blueprint Construction Services · Ottawa builder since 2005</div>
-    <div><a href="{MAILTO}">{EMAIL}</a></div>
+    return f"""<footer class="site-footer">
+  <div class="wrap footer-bar">
+    <div class="footer-id">Blueprint Construction Services · Ottawa builder since 2005</div>
+    <div class="footer-mail"><a href="{MAILTO}">{EMAIL}</a></div>
   </div>
 </footer>"""
+
+
+def lightbox_tag(depth: int) -> str:
+    return f'<script src="{asset(depth, "assets/lightbox.js")}"></script>'
+
+
+def zoomable(image: dict, depth: int, sizes: str, eager: bool = False, figure_class: str = "") -> str:
+    full = image["variants"]["jpg"][-1][1]
+    cls = f' class="{figure_class}"' if figure_class else ""
+    return (
+        f"<figure{cls}>"
+        f'<button type="button" class="zoom" data-full="{esc(asset(depth, full))}">'
+        f"{picture(image, depth, sizes, eager=eager)}"
+        "</button></figure>"
+    )
 
 
 def head(
@@ -589,7 +604,7 @@ def render_home(images: dict) -> str:
     <div class="wrap">
       <p class="hero-kicker">Ottawa builder since 2005</p>
       <h1>Built on transparency. Driven by integrity.</h1>
-      <p class="hero-lead">Custom homes, multi-unit, and commercial work, from design and permits through to occupancy.</p>
+      <p class="hero-lead measure">Custom homes, multi-unit, and commercial work, from design and permits through to occupancy.</p>
       <div class="btn-row">
         <a class="btn" href="gallery/">See my work</a>
         <a class="btn btn-ghost" href="{MAILTO}">Email Yves</a>
@@ -600,7 +615,7 @@ def render_home(images: dict) -> str:
   <section class="section" aria-label="Featured projects">
     <div class="wrap">
       <h2 class="section-title">Selected work</h2>
-      <p class="section-intro">A quiet portfolio of Ottawa builds — residential, heritage, and commercial — shaped by staying small and showing up on site.</p>
+      <p class="section-intro measure">A quiet portfolio of Ottawa builds: residential, heritage and commercial, shaped by staying small and showing up on site.</p>
       <div class="mag">
         {''.join(cards)}
       </div>
@@ -635,13 +650,13 @@ def render_home(images: dict) -> str:
   <section class="section process">
     <div class="wrap">
       <h2 class="section-title">How I work</h2>
-      <p class="section-intro">An adaptable process — step in for a roadblock, or manage the whole job.</p>
+      <p class="section-intro measure">An adaptable process. Step in for a roadblock, or manage the whole job.</p>
       <ol>
-        <li><h3>Feasibility</h3><p>Site, numbers, and what you actually want — before drawings that don’t fit the budget.</p></li>
+        <li><h3>Feasibility</h3><p>Site, numbers, and what you actually want, before drawings that don’t fit the budget.</p></li>
         <li><h3>Design &amp; permits</h3><p>Steer drawings, engineering, and permits; flag what paper plans miss.</p></li>
         <li><h3>A working budget</h3><p>Trade quotes near the end of design, then a final budget.</p></li>
         <li><h3>Build &amp; timeline</h3><p>Day-to-day site run: trades, inspections, suppliers, a timeline you can plan around.</p></li>
-        <li><h3>After-care</h3><p>Small issues show up after handover. I stay available.</p></li>
+        <li><h3>After-care</h3><p>Small issues show up after handover. I&nbsp;stay available.</p></li>
         <li><h3>Financing</h3><p>Relationships with private lenders who have financed Blueprint jobs before.</p></li>
       </ol>
     </div>
@@ -679,9 +694,7 @@ def render_gallery(images: dict) -> str:
     for project in PROJECTS:
         figures = []
         for image_id in project_photo_ids(project):
-            figures.append(
-                f"<figure>{picture(images[image_id], depth, sizes, eager=first_photo)}</figure>"
-            )
+            figures.append(zoomable(images[image_id], depth, sizes, eager=first_photo))
             first_photo = False
         cards.append(
             f'<article class="work-card" id="{project["id"]}">'
@@ -691,19 +704,24 @@ def render_gallery(images: dict) -> str:
             f'<div class="photo-set">{"".join(figures)}</div>'
             "</article>"
         )
+    pair = "".join(cards[:2])
+    rest = "".join(cards[2:])
     body = f"""{chrome(depth, "projects")}
 <main id="content">
   <section class="hero">
     <div class="wrap">
       <p class="hero-kicker">Ottawa builder since 2005</p>
       <h1>Projects</h1>
-      <p class="hero-lead">A quiet portfolio of Ottawa builds — residential, heritage, and commercial — shaped by staying small and showing up on site.</p>
+      <p class="hero-lead">A quiet portfolio of Ottawa builds: residential, heritage and commercial, shaped by staying small and showing up on site.</p>
     </div>
   </section>
   <section class="section flush-top">
     <div class="wrap">
+      <div class="project-pair">
+        {pair}
+      </div>
       <div class="project-list">
-        {''.join(cards)}
+        {rest}
       </div>
     </div>
   </section>
@@ -716,7 +734,7 @@ def render_gallery(images: dict) -> str:
         description=description,
         canonical_path="/gallery/",
         og_image=images["beechwood-exterior"],
-    ) + f"\n<body>\n{body}\n</body>\n</html>\n"
+    ) + f"\n<body>\n{body}\n{lightbox_tag(depth)}</body>\n</html>\n"
 
 
 def render_project(project: dict, images: dict) -> str:
@@ -729,7 +747,7 @@ def render_project(project: dict, images: dict) -> str:
     figures = []
     for index, (image_id, role) in enumerate(project["images"]):
         figures.append(
-            f'<figure class="{role}">{picture(images[image_id], depth, sizes[role], eager=index == 0)}</figure>'
+            zoomable(images[image_id], depth, sizes[role], eager=index == 0, figure_class=role)
         )
     body = f"""{chrome(depth, "projects")}
 <main id="content">
@@ -754,7 +772,7 @@ def render_project(project: dict, images: dict) -> str:
         canonical_path=f'/gallery/{project["slug"]}/',
         og_image=images[project["images"][0][0]],
         og_type="article",
-    ) + f"\n<body>\n{body}\n</body>\n</html>\n"
+    ) + f"\n<body>\n{body}\n{lightbox_tag(depth)}</body>\n</html>\n"
 
 
 def render_contact(images: dict) -> str:
@@ -1089,6 +1107,9 @@ def check_output() -> None:
         match = plural.search(visible)
         if match:
             raise SystemExit(f"plural voice in {path}: {match.group(0)}")
+        for mark, label in (("—", "em dash"), ("–", "en dash"), (" - ", "spaced hyphen")):
+            if mark in visible:
+                raise SystemExit(f"{label} in visible copy: {path}")
     for path in html_files:
         text = path.read_text()
         if path.parent.name == "project-recovery":
@@ -1252,6 +1273,7 @@ def main() -> None:
 
     (OUT / "assets").mkdir(parents=True, exist_ok=True)
     shutil.copyfile(SRC / "styles.css", OUT / "assets" / "styles.css")
+    shutil.copyfile(SRC / "lightbox.js", OUT / "assets" / "lightbox.js")
     shutil.copyfile(SRC / "logo.png", OUT / "assets" / "logo.png")
     font_out = OUT / "assets" / "fonts"
     font_out.mkdir(parents=True, exist_ok=True)
