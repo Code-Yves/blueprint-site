@@ -680,6 +680,49 @@ def render_slideshow(images: dict, depth: int) -> str:
 <script src="{asset(depth, "assets/slideshow.js")}"></script>"""
 
 
+def render_reviews() -> str:
+    quotes = [
+        (
+            "Throughout the build, Yves coordinated the trades and contractors effectively and kept everything moving smoothly. … we are extremely happy with our new custom home.",
+            "Brian E.",
+            "custom home",
+        ),
+        (
+            "He demonstrated integrity and trustworthiness at every stage of the project, qualities that are invaluable in construction.",
+            "Pierre L.",
+            "infill semi-detached build",
+        ),
+        (
+            "After a year of working very closely with Yves on a number of large projects, we can say with confidence that he is 100% trustworthy, always professional, and delivers top quality product.",
+            "Michelle V.",
+            "multiple projects",
+        ),
+    ]
+    cards = []
+    for quote, name, kind in quotes:
+        cards.append(
+            "<figure class=\"review-card\">"
+            f"<blockquote><p>{esc(quote)}</p></blockquote>"
+            "<figcaption>"
+            f"<span class=\"review-name\">{esc(name)}</span>"
+            f"<span class=\"review-kind\">{esc(kind)}</span>"
+            "</figcaption>"
+            "</figure>"
+        )
+    link = "https://www.google.com/maps?cid=9445139106874514141"
+    return f"""<section class="section" aria-labelledby="reviews-title">
+  <div class="wrap">
+    <p class="eyebrow">Google reviews</p>
+    <h2 id="reviews-title" class="section-title">What clients say</h2>
+    <p class="review-rating"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span> 5.0 stars from 19 Google reviews</p>
+    <div class="review-grid">
+      {"".join(cards)}
+    </div>
+    <p class="review-more"><a href="{link}" target="_blank" rel="noopener">Read all reviews on Google</a></p>
+  </div>
+</section>"""
+
+
 def render_home(images: dict) -> str:
     title = "Ottawa custom homes | Blueprint Construction"
     description = (
@@ -742,6 +785,8 @@ def render_home(images: dict) -> str:
       </ol>
     </div>
   </section>
+
+  {render_reviews()}
 
   {cta()}
 </main>"""
@@ -1217,10 +1262,12 @@ def check_output() -> None:
         visible = path.read_text()
         visible = re.sub(r"<script[\s\S]*?</script>", " ", visible)
         visible = re.sub(r"<style[\s\S]*?</style>", " ", visible)
+        spoken = re.sub(r"<blockquote[\s\S]*?</blockquote>", " ", visible)
         visible = html.unescape(re.sub(r"<[^>]+>", " ", visible))
+        spoken = html.unescape(re.sub(r"<[^>]+>", " ", spoken))
         if ";" in visible:
             raise SystemExit(f"semicolon in visible copy: {path}")
-        match = plural.search(visible)
+        match = plural.search(spoken)
         if match:
             raise SystemExit(f"plural voice in {path}: {match.group(0)}")
         for mark, label in (("—", "em dash"), ("–", "en dash"), (" - ", "spaced hyphen")):
@@ -1352,6 +1399,12 @@ def check_output() -> None:
             raise SystemExit(f"absolute claim still on home: {phrase}")
     if "My record speaks for itself" in home:
         raise SystemExit("repeated record line is still on the home page")
+    if "aggregateRating" in home or '"@type":"Review"' in home:
+        raise SystemExit("home includes review structured data")
+    if 'href="https://www.google.com/maps?cid=9445139106874514141"' not in home:
+        raise SystemExit("google reviews link missing")
+    if 'aria-label="5 out of 5 stars"' not in home:
+        raise SystemExit("star rating label missing")
     recovery = (OUT / "project-recovery" / "index.html").read_text()
     if "How it works" in recovery:
         raise SystemExit("project recovery still has How it works")
