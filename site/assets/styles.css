@@ -442,6 +442,7 @@ a:focus-visible {
   grid-row: 1 / span 4;
   grid-template-rows: subgrid;
 }
+.project-pair .work-card h2 { font-size: clamp(26px, 2.5vw, 32px); }
 .project-pair .photo-set { align-self: start; }
 .project-pair .photo-set figure { background: transparent; }
 .project-pair .zoom img {
