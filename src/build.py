@@ -9,6 +9,7 @@ No network calls. Requires Pillow, cwebp, and avifenc.
 from __future__ import annotations
 
 import html
+import json
 import re
 import shutil
 import subprocess
@@ -29,7 +30,7 @@ EMAIL = "yves@blueprintbuilds.com"
 MAILTO = f"mailto:{EMAIL}"
 GA_ID = "UA-26098310-1"
 WIDTHS = (640, 960, 1500)
-LASTMOD = "2026-11-09"
+LASTMOD = "2026-11-11"
 # Old Squarespace paths. Folder target is relative to /name/index.html.
 # File target is relative to /name.html. Canonical is the live page.
 REDIRECTS = [
@@ -188,6 +189,37 @@ IMAGES = {
         "title": "Yves Eggleston",
         "alt": "Yves Eggleston, owner of Blueprint Construction Services in Ottawa.",
     },
+}
+
+STEMS = {
+    "hintonburg": "hintonburg-10-unit-low-rise",
+    "westboro": "westboro-semi-rendering",
+    "heritage-ncc": "ncc-heritage-stone-house",
+    "beechwood-living": "beechwood-semi-living-room",
+    "beechwood-exterior": "beechwood-semi-exterior",
+    "beechwood-kitchen": "beechwood-semi-kitchen",
+    "beechwood-bath": "beechwood-semi-bathroom",
+    "beechwood-stair": "beechwood-semi-staircase",
+    "beacon": "beacon-lite-commercial-building",
+    "navan": "navan-custom-home",
+    "castle-semi": "castle-heights-semi",
+    "dalhousie": "dalhousie-heritage-restoration",
+    "orleans-exterior": "orleans-commercial-plaza",
+    "orleans-reception": "orleans-commercial-reception",
+    "orleans-hall": "orleans-commercial-hallway",
+    "new-ed-multi": "new-edinburgh-multi-unit",
+    "castle-multi": "castle-heights-multi-unit",
+    "vanier": "vanier-north-semi",
+    "rideau-living": "rideau-gardens-living-space",
+    "rideau-stair": "rideau-gardens-staircase",
+    "rideau-loft": "rideau-gardens-upper-landing",
+    "rooftop-lounge": "new-edinburgh-rooftop-lounge",
+    "rooftop-dining": "new-edinburgh-rooftop-dining",
+    "interior-kitchen": "residential-kitchen-stone-island",
+    "interior-living": "residential-living-fireplace",
+    "living-room": "furnished-living-room",
+    "steel": "building-under-construction",
+    "yves": "yves-eggleston-portrait",
 }
 
 # Gallery order. slug set means a project page.
@@ -412,7 +444,7 @@ def encode_one(task: tuple) -> dict:
             stderr=subprocess.DEVNULL,
         )
         png.unlink()
-        rel_base = f"assets/img/{image_id}-{width}"
+        rel_base = f"assets/img/{STEMS.get(image_id, image_id)}-{width}"
         made["jpg"].append((width, f"{rel_base}.jpg"))
         made["webp"].append((width, f"{rel_base}.webp"))
         made["avif"].append((width, f"{rel_base}.avif"))
@@ -443,11 +475,37 @@ def picture(image: dict, depth: int, sizes: str, eager: bool = False) -> str:
 
 
 def heading_html(text: str) -> str:
-    """Keep a middle dot on the first line when a title wraps."""
+    """Keep the place name with the dot so it does not sit alone."""
     if " · " in text:
         left, right = text.split(" · ", 1)
-        return f'{esc(left)} ·<span class="break"></span> {esc(right)}'
+        return f"{esc(left)} ·&nbsp;{esc(right)}"
     return esc(text)
+
+
+def org_jsonld() -> str:
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "HomeAndConstructionBusiness",
+        "name": "Blueprint Construction Services",
+        "url": ORIGIN,
+        "email": EMAIL,
+        "foundingDate": "2005",
+        "areaServed": [
+            {"@type": "City", "name": "Ottawa"},
+            {"@type": "AdministrativeArea", "name": "Ottawa and surrounding area"},
+        ],
+        "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Construction services",
+            "itemListElement": [
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Custom homes"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Multi-unit buildings"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Commercial construction"}},
+                {"@type": "Offer", "itemOffered": {"@type": "Service", "name": "Project recovery"}},
+            ],
+        },
+    }
+    return json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
 
 
 def chrome(depth: int, current: str) -> str:
@@ -478,8 +536,7 @@ def chrome(depth: int, current: str) -> str:
 def footer(depth: int) -> str:
     return f"""<footer class="site-footer">
   <div class="wrap footer-bar">
-    <div class="footer-id">Blueprint Construction Services · Ottawa builder since 2005</div>
-    <div class="footer-mail"><a href="{MAILTO}">{EMAIL}</a></div>
+    <div class="footer-id">Blueprint Construction Services · Building since 2005</div>
   </div>
 </footer>"""
 
@@ -510,6 +567,8 @@ def head(
     noindex: bool = False,
     jsonld: str | None = None,
 ) -> str:
+    if jsonld is None:
+        jsonld = org_jsonld()
     canonical = ORIGIN + canonical_path
     jpg = og_image["variants"]["jpg"][-1][1]
     og_url = f"{ORIGIN}/{jpg}"
@@ -561,48 +620,78 @@ def head(
 </head>"""
 
 
+def signoff() -> str:
+    return '<p class="cta-signoff">Blueprint Construction Services · Building since 2005</p>'
+
+
 def cta() -> str:
     return f"""<section class="cta-band">
   <div class="wrap">
-    <h2>Every successful project starts with an honest conversation.</h2>
+    <h2>Every successful project starts with an honest&nbsp;conversation.</h2>
     <p>Let’s see if I’m the right fit. Write to <a class="mail" href="{MAILTO}">{EMAIL}</a>.</p>
     <a class="btn" href="{MAILTO}">Start a conversation</a>
+    {signoff()}
   </div>
 </section>"""
 
 
+def close_band() -> str:
+    return f"""<section class="cta-band cta-close" aria-label="About Blueprint">
+  <div class="wrap">
+    {signoff()}
+  </div>
+</section>"""
+
+
+def render_slideshow(images: dict, depth: int) -> str:
+    specs = [
+        ("beechwood-living", "gallery/semi-detach-beechwood/", "Beechwood semi living room, 2022"),
+        ("beechwood-exterior", "gallery/semi-detach-beechwood/", "Beechwood semis at twilight, 2022"),
+        ("heritage-ncc", "gallery/#heritage-ncc", "Heritage stone house for the NCC, 2024"),
+        ("rooftop-lounge", "gallery/rooftop-new-edinburgh/", "New Edinburgh rooftop lounge"),
+        ("orleans-exterior", "gallery/commercial-orleans/", "Commercial plaza in Orléans, 2018"),
+        ("rideau-living", "gallery/rideau-gardens/", "Rideau Gardens living space, 2009"),
+        ("beacon", "gallery/#beacon", "Beacon Lite commercial building, 2021"),
+        ("interior-kitchen", "gallery/residential-interior/", "Residential kitchen with a stone island"),
+    ]
+    payload = []
+    for image_id, href, caption in specs:
+        image = images[image_id]
+        src = asset(depth, image["variants"]["jpg"][-1][1])
+        payload.append({"src": src, "alt": image["alt"], "href": href, "caption": caption})
+    first = payload[0]
+    data = json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c")
+    return f"""<section class="section" data-slideshow tabindex="0" aria-roledescription="carousel" aria-label="Selected work">
+  <div class="wrap">
+    <h2 class="section-title">Selected work</h2>
+    <div class="slide-frame">
+      <a class="slide-link" href="{esc(first["href"])}">
+        <img class="slide-photo" src="{esc(first["src"])}" alt="{esc(first["alt"])}" width="1500" height="1000" loading="lazy" decoding="async">
+      </a>
+      <button type="button" class="slide-btn slide-prev" aria-label="Previous photo"><span aria-hidden="true">&#8249;</span></button>
+      <button type="button" class="slide-btn slide-next" aria-label="Next photo"><span aria-hidden="true">&#8250;</span></button>
+    </div>
+    <p class="slide-caption"><a href="{esc(first["href"])}">{esc(first["caption"])}</a></p>
+    <p class="slide-count" aria-live="polite">1 / {len(payload)}</p>
+    <p><a class="see-all" href="gallery/">See all projects</a></p>
+    <script type="application/json" id="slide-data">{data}</script>
+  </div>
+</section>
+<script src="{asset(depth, "assets/slideshow.js")}"></script>"""
+
+
 def render_home(images: dict) -> str:
-    title = "Blueprint Construction | Ottawa builder since 2005"
+    title = "Ottawa custom homes | Blueprint Construction"
     description = (
-        "Open book construction management in Ottawa. "
-        "Custom homes, multi-unit buildings, and commercial work, from design and permits to occupancy."
+        "Custom homes, multi-unit buildings, and commercial work in Ottawa, "
+        "from design and permits through to occupancy."
     )
     depth = 0
-    mag = [
-        ("beechwood-living", "big", "gallery/semi-detach-beechwood/", "Semi-Detach · Beechwood · 2022", "(max-width: 860px) 100vw, 640px", True),
-        ("heritage-ncc", "sm", "gallery/#heritage-ncc", "Heritage · NCC · 2024", "(max-width: 860px) 100vw, 420px", False),
-        ("beacon", "sm", "gallery/#beacon", "Commercial · Beacon Lite · 2021", "(max-width: 860px) 100vw, 420px", False),
-    ]
-    cards = []
-    for image_id, size, href, caption, sizes, eager in mag:
-        cards.append(
-            f'<a class="mag-card {size}" href="{href}">'
-            f"<figure>{picture(images[image_id], depth, sizes, eager=eager)}"
-            f"<figcaption>{esc(caption)}</figcaption></figure></a>"
-        )
-    jsonld = (
-        '{"@context":"https://schema.org","@type":"GeneralContractor",'
-        '"name":"Blueprint Construction Services","url":"https://blueprintottawa.com/",'
-        f'"email":"{EMAIL}","foundingDate":"2005",'
-        '"areaServed":{"@type":"City","name":"Ottawa"},'
-        '"description":"Open-book construction management in Ottawa since 2005. '
-        'Custom homes, multi-unit, and commercial work, from design and permits to occupancy."}'
-    )
     body = f"""{chrome(depth, "home")}
 <main id="content">
   <section class="hero">
     <div class="wrap">
-      <p class="hero-kicker">Ottawa builder since 2005</p>
+      <p class="hero-kicker">Building since 2005</p>
       <h1>Built on transparency. Driven by integrity.</h1>
       <p class="hero-lead measure">Custom homes, multi-unit, and commercial work, from design and permits through to occupancy.</p>
       <div class="btn-row">
@@ -612,22 +701,14 @@ def render_home(images: dict) -> str:
     </div>
   </section>
 
-  <section class="section" aria-label="Featured projects">
-    <div class="wrap">
-      <h2 class="section-title">Selected work</h2>
-      <p class="section-intro measure">A quiet portfolio of Ottawa builds: residential, heritage and commercial, shaped by staying small and showing up on site.</p>
-      <div class="mag">
-        {''.join(cards)}
-      </div>
-    </div>
-  </section>
+  {render_slideshow(images, depth)}
 
   <section class="section">
     <div class="wrap about">
       <figure class="portrait">{picture(images["yves"], depth, "(max-width: 699px) 40vw, 220px")}</figure>
       <div class="prose">
         <p class="eyebrow">About</p>
-        <h2 class="section-title">Hi, I’m Yves Eggleston</h2>
+        <h2 class="section-title">Hi, I’m Yves&nbsp;Eggleston</h2>
         <p>Whether it’s a custom home, a multi-unit building, or a commercial space, I can help you take your project from the design and permit stages all the way to occupancy.</p>
         <p>My journey in construction began in <strong>2005</strong>. I only take on a limited number of projects at a time and by staying small, I can focus on your project. I’m on-site in person to keep an eye on every detail, ensuring that the work happening behind the walls is just as solid as the work you see on the outside.</p>
         <p>I work in the open. I share receipts, discounts, and quotes with you directly. Costs are billed at cost, with no hidden markups.</p>
@@ -641,8 +722,8 @@ def render_home(images: dict) -> str:
       <p class="eyebrow">A reputation built on staying put</p>
       <h2 class="section-title">Twenty years of consistency.</h2>
       <div class="prose">
-        <p>I have been building in Ottawa since 2005. I finish what I start. My record speaks for itself. When an issue comes up, I work to resolve it directly with owners. I have had the same email address for over 20 years.</p>
-        <p>Not every project goes exactly to plan. I stay with the work. Most of my work has come by word of mouth. Blueprint does not use lawn signs, and I am not on social media.</p>
+        <p>I have been building in Ottawa since 2005. I finish what I start. When an issue comes up, I work to resolve it directly with owners. I have had the same email address for over 20 years.</p>
+        <p>Not every project goes exactly to plan. I stay with the work. Most of my work has come by word of mouth. No lawn signs, no social media. My work speaks for itself.</p>
       </div>
     </div>
   </section>
@@ -653,25 +734,23 @@ def render_home(images: dict) -> str:
       <p class="section-intro measure">An adaptable process. Step in for a roadblock, or manage the whole job.</p>
       <ol>
         <li><h3>Feasibility</h3><p>Site, numbers, and what you actually want, before drawings that don’t fit the budget.</p></li>
-        <li><h3>Design &amp; permits</h3><p>Steer drawings, engineering, and permits; flag what paper plans miss.</p></li>
+        <li><h3>Design &amp; permits</h3><p>I steer drawings, engineering, and permits, and I flag what the paper plans miss.</p></li>
         <li><h3>A working budget</h3><p>Trade quotes near the end of design, then a final budget.</p></li>
         <li><h3>Build &amp; timeline</h3><p>Day-to-day site run: trades, inspections, suppliers, a timeline you can plan around.</p></li>
         <li><h3>After-care</h3><p>Small issues show up after handover. I&nbsp;stay available.</p></li>
-        <li><h3>Financing</h3><p>Relationships with private lenders who have financed Blueprint jobs before.</p></li>
+        <li><h3>Financing</h3><p>I have worked with private lenders on past Blueprint jobs.</p></li>
       </ol>
     </div>
   </section>
 
   {cta()}
-</main>
-{footer(depth)}"""
+</main>"""
     return head(
         depth=depth,
         title=title,
         description=description,
         canonical_path="/",
         og_image=images["beechwood-living"],
-        jsonld=jsonld,
     ) + f"\n<body>\n{body}\n</body>\n</html>\n"
 
 
@@ -683,10 +762,10 @@ def project_photo_ids(project: dict) -> list[str]:
 
 def render_gallery(images: dict) -> str:
     depth = 1
-    title = "Projects | Blueprint Construction"
+    title = "Ottawa project photos | Blueprint Construction"
     description = (
-        "Ottawa projects by Blueprint Construction since 2005: custom homes, semi-detached houses, "
-        "multi-unit buildings, heritage restoration, and commercial work."
+        "Photos of Ottawa builds by Blueprint Construction. Custom homes, semis, "
+        "multi-unit buildings, heritage work, and commercial projects."
     )
     cards = []
     first_photo = True
@@ -710,7 +789,7 @@ def render_gallery(images: dict) -> str:
 <main id="content">
   <section class="hero">
     <div class="wrap">
-      <p class="hero-kicker">Ottawa builder since 2005</p>
+      <p class="hero-kicker">Building since 2005</p>
       <h1>Projects</h1>
       <p class="hero-lead">A quiet portfolio of Ottawa builds: residential, heritage and commercial, shaped by staying small and showing up on site.</p>
     </div>
@@ -726,8 +805,7 @@ def render_gallery(images: dict) -> str:
     </div>
   </section>
   {cta()}
-</main>
-{footer(depth)}"""
+</main>"""
     return head(
         depth=depth,
         title=title,
@@ -737,9 +815,60 @@ def render_gallery(images: dict) -> str:
     ) + f"\n<body>\n{body}\n{lightbox_tag(depth)}</body>\n</html>\n"
 
 
+PROJECT_PAGES = {
+    "rooftop-new-edinburgh": {
+        "title": "New Edinburgh rooftop | Blueprint Ottawa",
+        "description": "A residential rooftop terrace in New Edinburgh, Ottawa, with a lounge, a fire pit, a dining deck, and a hot tub.",
+        "story": [
+            "I built a rooftop terrace on a home in New Edinburgh.",
+            "One side is a lounge with a fire pit, chairs, a sofa, and a glazed pavilion.",
+            "The dining deck has string lights, a table, lounge chairs, a hot tub, and a grill.",
+        ],
+    },
+    "semi-detach-beechwood": {
+        "title": "Beechwood semis in Ottawa | Blueprint",
+        "description": "A pair of semi-detached homes on Beechwood in Ottawa, built in 2022, from the envelope through the interiors.",
+        "story": [
+            "I built this pair of semis on Beechwood in 2022. The work runs from the outside walls through the rooms you live in.",
+            "The living room has a linear fireplace. The kitchen has a walnut island, white counters, and a wall oven.",
+            "The bathroom has a freestanding tub and a walk-in shower. A light wood stair with metal balusters links the floors.",
+        ],
+    },
+    "commercial-orleans": {
+        "title": "Orléans commercial plaza | Blueprint",
+        "description": "A single-storey commercial plaza in Orléans, Ottawa, finished in 2018, with tenant interiors.",
+        "story": [
+            "I finished this single-storey commercial plaza in Orléans in 2018.",
+            "The outside is a pale facade with black awnings and a landscaped edge along the parking.",
+            "Inside, one tenant space has a reception desk, and another has a waiting hallway with chairs.",
+        ],
+    },
+    "rideau-gardens": {
+        "title": "Rideau Gardens addition | Blueprint Ottawa",
+        "description": "A home addition and renovation in Rideau Gardens, Ottawa, from 2009, with a new living space, stair, and upper landing.",
+        "story": [
+            "This is an addition and renovation I built in Rideau Gardens in 2009.",
+            "The living space opens through black-framed sliding doors to a deck.",
+            "I added a stair with wood treads and a steel and glass rail, plus an upper landing with a desk under a window.",
+        ],
+    },
+    "residential-interior": {
+        "title": "Ottawa residential interior | Blueprint",
+        "description": "A finished residential interior in Ottawa, with a white kitchen, a stone island, and a living room with a fireplace.",
+        "story": [
+            "This is a finished residential interior in Ottawa.",
+            "The kitchen is white, with a stone island, double wall ovens, and slim pendant lights.",
+            "The living room has pale wood floors, a stone fireplace wall, and sliding doors to a balcony.",
+        ],
+    },
+}
+
+
 def render_project(project: dict, images: dict) -> str:
     depth = 2
-    title = f'{project["heading"]} | Blueprint Construction'
+    page = PROJECT_PAGES[project["slug"]]
+    title = page["title"]
+    description = page["description"]
     sizes = {
         "wide": "(max-width: 860px) 100vw, 1120px",
         "cell": "(max-width: 860px) 100vw, 540px",
@@ -757,6 +886,7 @@ def render_project(project: dict, images: dict) -> str:
       <p class="project-meta">{esc(project["kicker"])}</p>
       <h1>{heading_html(project["heading"])}</h1>
       <p class="project-lede">{esc(project["lede"])}</p>
+      <div class="prose">{"".join(f"<p>{esc(paragraph)}</p>" for paragraph in page["story"])}</div>
       <div class="project-grid">
         {''.join(figures)}
       </div>
@@ -764,11 +894,11 @@ def render_project(project: dict, images: dict) -> str:
     </div>
   </section>
 </main>
-{footer(depth)}"""
+{close_band()}"""
     return head(
         depth=depth,
         title=title,
-        description=project["description"],
+        description=description,
         canonical_path=f'/gallery/{project["slug"]}/',
         og_image=images[project["images"][0][0]],
         og_type="article",
@@ -777,18 +907,17 @@ def render_project(project: dict, images: dict) -> str:
 
 def render_contact(images: dict) -> str:
     depth = 1
-    title = "Contact | Blueprint Construction"
+    title = "Contact an Ottawa builder | Blueprint"
     description = (
-        "Talk with Yves Eggleston at Blueprint Construction. "
-        f"Email {EMAIL}. "
-        "Open-book construction management in Ottawa since 2005."
+        f"Write to Yves Eggleston at Blueprint Construction in Ottawa. "
+        f"Email {EMAIL} about a custom home, multi-unit building, or commercial work."
     )
     body = f"""{chrome(depth, "contact")}
 <main id="content">
   <section class="hero">
     <div class="wrap">
       <p class="hero-kicker">Contact</p>
-      <h1>Honest advice. Solid foundations.</h1>
+      <h1>Honest advice. Solid&nbsp;foundations.</h1>
       <p class="hero-lead">Let’s see if I’m the right fit. The only way to reach Blueprint is by email.</p>
       <a class="btn" href="{MAILTO}">Email Yves</a>
     </div>
@@ -806,7 +935,7 @@ def render_contact(images: dict) -> str:
     </div>
   </section>
 </main>
-{footer(depth)}"""
+{close_band()}"""
     return head(
         depth=depth,
         title=title,
@@ -818,11 +947,10 @@ def render_contact(images: dict) -> str:
 
 def render_project_recovery(images: dict) -> str:
     depth = 1
-    title = "Project Recovery | Blueprint Construction"
+    title = "Project recovery in Ottawa | Blueprint"
     description = (
-        "Project Recovery helps banks, investors, realtors, lawyers, and owners "
-        "managing their own builds in Ottawa. I help you understand where a project "
-        "stands and what comes next. Call Yves Eggleston."
+        "I help banks, investors, realtors, lawyers, and owners in Ottawa "
+        "see where a stalled build stands and what can come next."
     )
     phone = "613 262 2442"
     tel = "tel:+16132624442"
@@ -865,11 +993,11 @@ def render_project_recovery(images: dict) -> str:
         </article>
         <article class="track-card">
           <h3>A clear plan to get unstuck</h3>
-          <p>I review the project, what went wrong, and what finishing honestly involves. The first look is on me. Before any paid work, I agree the scope and the fee in writing. If you want, I stay on as your person on site.</p>
+          <p>I review the project, what went wrong, and what finishing honestly involves. The first look is on me. Before any paid work, I agree the scope in writing. If you want, I stay on as your person on site.</p>
         </article>
         <article class="track-card">
           <h3>Money to finish the job</h3>
-          <p>Financing to complete the construction, secured against the property, may be available. Any financing is subject to assessment and to terms you agree in writing. Approval is not automatic, and I do not promise that funds will be offered.</p>
+          <p>I can help you see what finishing still costs. I do not promise funding, and I do not promise that a lender will step in.</p>
         </article>
         <article class="track-card">
           <h3>Someone in your corner</h3>
@@ -930,30 +1058,16 @@ def render_project_recovery(images: dict) -> str:
     </div>
   </section>
 
-  <section class="section flush-top">
-    <div class="wrap">
-      <h2 class="section-title">How it works</h2>
-      <ol class="steps">
-        <li><h3>First look on me</h3><p>You tell me where things stand.</p></li>
-        <li><h3>A straight assessment</h3><p>I look at the work remaining and the likely costs.</p></li>
-        <li><h3>You choose the help</h3><p>Mediation, advice, financing, or support on the project.</p></li>
-        <li><h3>Agreed next steps</h3><p>I stay with you for that support. I do not guarantee that the build will be finished, and I do not guarantee a fair outcome.</p></li>
-      </ol>
-      <p class="section-intro follow">I only take on a project when I can see clearly what went wrong and what it will honestly take to finish.</p>
-      <p class="disclaimer">Blueprint Construction is not a home inspector, a lawyer, or an appraiser. When the work needs one of those people, I refer you to a qualified professional.</p>
-    </div>
-  </section>
-
   <section class="cta-band">
     <div class="wrap">
       <h2>If a project has stalled or become more than you can manage, talk to me before the next move.</h2>
       <p>Call Yves Eggleston.</p>
       <a class="btn" href="{tel}">Call {phone}</a>
-      <p>Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
+      <p class="cta-follow">Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
+      {signoff()}
     </div>
   </section>
-</main>
-{footer(depth)}"""
+</main>"""
     return head(
         depth=depth,
         title=title,
@@ -1022,7 +1136,7 @@ def render_not_found() -> str:
     </div>
   </section>
 </main>
-{footer(0)}
+{close_band()}
 </body>
 </html>
 """
@@ -1103,7 +1217,9 @@ def check_output() -> None:
         visible = path.read_text()
         visible = re.sub(r"<script[\s\S]*?</script>", " ", visible)
         visible = re.sub(r"<style[\s\S]*?</style>", " ", visible)
-        visible = re.sub(r"<[^>]+>", " ", visible)
+        visible = html.unescape(re.sub(r"<[^>]+>", " ", visible))
+        if ";" in visible:
+            raise SystemExit(f"semicolon in visible copy: {path}")
         match = plural.search(visible)
         if match:
             raise SystemExit(f"plural voice in {path}: {match.group(0)}")
@@ -1191,6 +1307,10 @@ def check_output() -> None:
             raise SystemExit(f"missing og or analytics: {path}")
         title = text.split("<title>", 1)[1].split("</title>", 1)[0]
         desc = text.split('name="description" content="', 1)[1].split('"', 1)[0]
+        if len(title) > 60:
+            raise SystemExit(f"title over 60 chars ({len(title)}): {title}")
+        if len(desc) > 155:
+            raise SystemExit(f"description over 155 chars ({len(desc)}): {desc}")
         if title in titles:
             raise SystemExit(f"duplicate title: {title}")
         if desc in descriptions:
@@ -1200,15 +1320,18 @@ def check_output() -> None:
         if 'alt=""' in text:
             raise SystemExit(f"empty alt in {path}")
     home = (OUT / "index.html").read_text()
-    if "<title>Blueprint Construction | Ottawa builder since 2005</title>" not in home:
+    if "<title>Ottawa custom homes | Blueprint Construction</title>" not in home:
         raise SystemExit("home title mismatch")
     if f'"email":"{EMAIL}"' not in home:
         raise SystemExit("home json-ld email mismatch")
+    if "telephone" in home or "streetAddress" in home:
+        raise SystemExit("json-ld includes a phone or street address")
     for phrase in (
         "I finish what I start.",
-        "My record speaks for itself.",
+        "No lawn signs, no social media. My work speaks for itself.",
         "I work to resolve it directly with owners.",
         "Costs are billed at cost, with no hidden markups.",
+        "Building since 2005",
     ):
         if phrase not in home:
             raise SystemExit(f"home missing softened claim: {phrase}")
@@ -1227,6 +1350,11 @@ def check_output() -> None:
     ):
         if phrase in home.lower():
             raise SystemExit(f"absolute claim still on home: {phrase}")
+    if "My record speaks for itself" in home:
+        raise SystemExit("repeated record line is still on the home page")
+    recovery = (OUT / "project-recovery" / "index.html").read_text()
+    if "How it works" in recovery:
+        raise SystemExit("project recovery still has How it works")
     gallery = (OUT / "gallery" / "index.html").read_text()
     if "View project" in gallery:
         raise SystemExit("gallery still links out with View project")
@@ -1274,6 +1402,7 @@ def main() -> None:
     (OUT / "assets").mkdir(parents=True, exist_ok=True)
     shutil.copyfile(SRC / "styles.css", OUT / "assets" / "styles.css")
     shutil.copyfile(SRC / "lightbox.js", OUT / "assets" / "lightbox.js")
+    shutil.copyfile(SRC / "slideshow.js", OUT / "assets" / "slideshow.js")
     shutil.copyfile(SRC / "logo.png", OUT / "assets" / "logo.png")
     font_out = OUT / "assets" / "fonts"
     font_out.mkdir(parents=True, exist_ok=True)
