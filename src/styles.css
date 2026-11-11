@@ -773,6 +773,70 @@ a.mail,
   margin-top: var(--space-1);
   font-weight: 600;
 }
+
+.review-rating {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0 0 var(--space-3);
+  font-size: 18px;
+}
+.stars {
+  color: var(--teal);
+  letter-spacing: 0.12em;
+  font-size: 18px;
+  line-height: 1;
+}
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+  align-items: stretch;
+}
+.review-card {
+  margin: 0;
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.review-card blockquote {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  quotes: none;
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+.review-card blockquote p { margin: 0; }
+.review-card figcaption { margin-top: auto; padding-top: var(--space-3); }
+.review-name {
+  display: block;
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  font-variant: small-caps;
+}
+.review-kind {
+  display: block;
+  margin-top: var(--space-1);
+  color: var(--muted);
+  font-size: 16px;
+}
+.review-more { margin: var(--space-4) 0 0; }
+.review-more a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-weight: 600;
+}
+@media (max-width: 860px) {
+  .review-grid { grid-template-columns: 1fr; gap: var(--space-3); }
+}
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .slide-frame img { transition: none; }
