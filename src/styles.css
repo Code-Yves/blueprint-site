@@ -712,14 +712,20 @@ a.mail,
   background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px;
 }
 .cta-band .wrap { position: relative; z-index: 1; }
-.cta-signoff {
+.cta-band .cta-signoff {
   margin: var(--space-5) 0 0;
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
   color: rgba(245, 240, 230, 0.92);
   font-size: 16px;
   line-height: 1.5;
 }
-.cta-close { padding: var(--space-4) 0; }
-.cta-close .cta-signoff { margin: 0; }
+.cta-close { padding: var(--space-5) 0; }
+.cta-close .cta-signoff { margin-top: 0; }
+@media (max-width: 700px) {
+  .cta-band .cta-signoff { margin-top: 40px; }
+  .cta-close .cta-signoff { margin-top: 0; }
+}
 
 .slide-frame {
   position: relative;
@@ -737,8 +743,15 @@ a.mail,
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   width: 44px;
   height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
   border: 0;
   background: #111;
   color: #fff;
