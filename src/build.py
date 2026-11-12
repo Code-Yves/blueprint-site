@@ -556,6 +556,16 @@ def zoomable(image: dict, depth: int, sizes: str, eager: bool = False, figure_cl
     )
 
 
+def icon_links(depth: int) -> str:
+    return "\n".join(
+        [
+            f'<link rel="icon" href="{asset(depth, "favicon.svg")}" type="image/svg+xml">',
+            f'<link rel="icon" href="{asset(depth, "favicon.ico")}" sizes="16x16 32x32 48x48">',
+            f'<link rel="apple-touch-icon" href="{asset(depth, "apple-touch-icon.png")}" sizes="180x180">',
+        ]
+    )
+
+
 def head(
     *,
     depth: int,
@@ -610,9 +620,7 @@ def head(
 <meta name="twitter:image" content="{og_url}">
 <meta name="twitter:image:alt" content="{esc(og_image["alt"])}">
 <meta name="theme-color" content="#F5F0E6">
-<link rel="icon" href="{asset(depth, "favicon.svg")}" type="image/svg+xml">
-<link rel="icon" href="{asset(depth, "favicon.ico")}" sizes="32x32">
-<link rel="apple-touch-icon" href="{asset(depth, "apple-touch-icon.png")}">
+{icon_links(depth)}
 {preload}
 <link rel="stylesheet" href="{asset(depth, "assets/styles.css")}">
 <script async src="https://www.googletagmanager.com/gtag/js?id={GA_ID}"></script>
@@ -650,20 +658,20 @@ def close_band() -> str:
 
 def render_slideshow(images: dict, depth: int) -> str:
     specs = [
-        ("beechwood-living", "gallery/semi-detach-beechwood/", "Beechwood semi living room, 2022"),
-        ("beechwood-exterior", "gallery/semi-detach-beechwood/", "Beechwood semis at twilight, 2022"),
-        ("heritage-ncc", "gallery/#heritage-ncc", "Heritage stone house for the NCC, 2024"),
-        ("rooftop-lounge", "gallery/rooftop-new-edinburgh/", "New Edinburgh rooftop lounge"),
-        ("orleans-exterior", "gallery/commercial-orleans/", "Commercial plaza in Orléans, 2018"),
-        ("rideau-living", "gallery/rideau-gardens/", "Rideau Gardens living space, 2009"),
-        ("beacon", "gallery/#beacon", "Beacon Lite commercial building, 2021"),
-        ("interior-kitchen", "gallery/residential-interior/", "Residential kitchen with a stone island"),
+        ("beechwood-living", "gallery/semi-detach-beechwood/"),
+        ("beechwood-exterior", "gallery/semi-detach-beechwood/"),
+        ("heritage-ncc", "gallery/#heritage-ncc"),
+        ("rooftop-lounge", "gallery/rooftop-new-edinburgh/"),
+        ("orleans-exterior", "gallery/commercial-orleans/"),
+        ("rideau-living", "gallery/rideau-gardens/"),
+        ("beacon", "gallery/#beacon"),
+        ("interior-kitchen", "gallery/residential-interior/"),
     ]
     payload = []
-    for image_id, href, caption in specs:
+    for image_id, href in specs:
         image = images[image_id]
         src = asset(depth, image["variants"]["jpg"][-1][1])
-        payload.append({"src": src, "alt": image["alt"], "href": href, "caption": caption})
+        payload.append({"src": src, "alt": image["alt"], "href": href})
     first = payload[0]
     data = json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c")
     return f"""<section class="section" data-slideshow tabindex="0" aria-roledescription="carousel" aria-label="Selected work">
@@ -671,14 +679,12 @@ def render_slideshow(images: dict, depth: int) -> str:
     <h2 class="section-title">Selected work</h2>
     <div class="slide-frame">
       <a class="slide-link" href="{esc(first["href"])}">
-        <img class="slide-photo" src="{esc(first["src"])}" alt="{esc(first["alt"])}" width="1500" height="1000" loading="lazy" decoding="async">
+        <img class="slide-photo is-active" src="{esc(first["src"])}" alt="{esc(first["alt"])}" width="1500" height="1000" decoding="async">
+        <img class="slide-photo" src="{esc(first["src"])}" alt="{esc(first["alt"])}" aria-hidden="true" width="1500" height="1000" decoding="async">
       </a>
       <button type="button" class="slide-btn slide-prev" aria-label="Previous photo"><span aria-hidden="true">&#8249;</span></button>
       <button type="button" class="slide-btn slide-next" aria-label="Next photo"><span aria-hidden="true">&#8250;</span></button>
     </div>
-    <p class="slide-caption"><a href="{esc(first["href"])}">{esc(first["caption"])}</a></p>
-    <p class="slide-count" aria-live="polite">1 / {len(payload)}</p>
-    <p><a class="see-all" href="gallery/">See all projects</a></p>
     <script type="application/json" id="slide-data">{data}</script>
   </div>
 </section>
@@ -1140,7 +1146,7 @@ def render_redirect(target: str, canonical_path: str, depth: int) -> str:
 <meta name="robots" content="noindex, follow">
 <meta http-equiv="refresh" content="0; url={href}">
 <script>location.replace("{js_target}");</script>
-<link rel="icon" href="{asset(depth, "favicon.svg")}" type="image/svg+xml">
+{icon_links(depth)}
 </head>
 <body>
 <p>This page has moved. <a href="{href}">Continue to Blueprint Construction</a>.</p>
@@ -1160,7 +1166,7 @@ def render_not_found() -> str:
 <title>Page not found | Blueprint Construction</title>
 <link rel="canonical" href="{ORIGIN}/404.html">
 <meta name="robots" content="noindex, follow">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+{icon_links(0)}
 <link rel="stylesheet" href="assets/styles.css">
 <script>
 (function () {{
@@ -1418,6 +1424,17 @@ def check_output() -> None:
         raise SystemExit("google reviews link missing")
     if 'aria-label="5 out of 5 stars"' not in home:
         raise SystemExit("star rating label missing")
+    for gone in ("slide-caption", "slide-count", "See all projects", "1 / 8"):
+        if gone in home:
+            raise SystemExit(f"slideshow chrome still on the homepage: {gone}")
+    svg = (SRC / "favicon.svg").read_text()
+    if "#1E3A8A" not in svg or "#155A50" in svg:
+        raise SystemExit("favicon is not the royal blue logo mark")
+    for path in html_files:
+        text = path.read_text()
+        for needle in ("favicon.svg", "favicon.ico", "apple-touch-icon.png"):
+            if needle not in text:
+                raise SystemExit(f"missing icon link in {path}")
     recovery = (OUT / "project-recovery" / "index.html").read_text()
     if "How it works" in recovery:
         raise SystemExit("project recovery still has How it works")
