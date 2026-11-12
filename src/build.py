@@ -580,13 +580,18 @@ def head(
         ]
     )
     ld = f'\n<script type="application/ld+json">{jsonld}</script>' if jsonld else ""
+    verification = (
+        '\n<meta name="google-site-verification" content="Xv-lHPkfTRGaFG7mP4c1S8lE4lHom6mED25lzqU74e4" />'
+        if canonical_path == "/"
+        else ""
+    )
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title>
-<meta name="description" content="{esc(description)}">
+<meta name="description" content="{esc(description)}">{verification}
 <link rel="canonical" href="{canonical}">
 <meta name="robots" content="{robots}">
 <meta property="og:site_name" content="Blueprint Construction">
@@ -1369,6 +1374,14 @@ def check_output() -> None:
     home = (OUT / "index.html").read_text()
     if "<title>Ottawa custom homes | Blueprint Construction</title>" not in home:
         raise SystemExit("home title mismatch")
+    verify = '<meta name="google-site-verification" content="Xv-lHPkfTRGaFG7mP4c1S8lE4lHom6mED25lzqU74e4" />'
+    if verify not in home:
+        raise SystemExit("homepage is missing the Search Console tag")
+    for path in html_files:
+        if path == OUT / "index.html":
+            continue
+        if "google-site-verification" in path.read_text():
+            raise SystemExit(f"Search Console tag leaked into {path}")
     if f'"email":"{EMAIL}"' not in home:
         raise SystemExit("home json-ld email mismatch")
     if "telephone" in home or "streetAddress" in home:
