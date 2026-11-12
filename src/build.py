@@ -759,7 +759,7 @@ def render_home(images: dict) -> str:
 
   <section class="section">
     <div class="wrap about">
-      <figure class="portrait">{picture(images["yves"], depth, "(max-width: 699px) 40vw, 220px")}</figure>
+      <figure class="portrait">{picture(images["yves"], depth, "(max-width: 699px) 200px, 280px")}</figure>
       <div class="prose">
         <p class="eyebrow">About</p>
         <h2 class="section-title">Hi, I’m Yves&nbsp;Eggleston</h2>

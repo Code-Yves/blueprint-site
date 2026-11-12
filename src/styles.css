@@ -288,7 +288,7 @@ a:focus-visible {
 .about img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: center 18%; }
 .about .wide-photo img { aspect-ratio: 3 / 2; object-position: center; }
 .about:has(.portrait) {
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 280px minmax(0, 1fr);
   gap: var(--space-5);
   align-items: start;
 }
@@ -632,11 +632,11 @@ body.lightbox-open { overflow: hidden; }
   .about .portrait,
   .about .wide-photo {
     float: none;
-    width: 160px;
+    width: 200px;
     margin: 0;
   }
   .about .portrait img,
-  .about .wide-photo img { width: 160px; height: auto; }
+  .about .wide-photo img { width: 200px; height: auto; }
 }
 
 @media (max-width: 599px) {
