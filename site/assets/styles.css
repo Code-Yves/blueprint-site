@@ -300,6 +300,7 @@ a:focus-visible {
   object-position: center 18%;
 }
 .prose p { margin: 0 0 var(--space-2); color: var(--muted); max-width: 62ch; text-wrap: pretty; }
+.prose p.eyebrow { color: var(--teal); }
 .prose strong { color: var(--ink); }
 .prose a { font-weight: 600; }
 
@@ -414,11 +415,12 @@ a:focus-visible {
 .back-link:hover { border-bottom-width: 2px; }
 
 .project-list { display: flex; flex-direction: column; gap: var(--space-6); }
+.projects-hero .hero-lead { margin-bottom: 0; }
 .work-card h2 {
   font-family: "Libre Baskerville", Georgia, serif;
   font-size: clamp(26px, 3vw, 36px);
   line-height: 1.2;
-  margin: 0 0 var(--space-2);
+  margin: 0 0 var(--space-1);
 }
 .work-card .meta { margin: 0; color: var(--muted); font-size: 16px; }
 .work-card .note { margin: var(--space-1) 0 0; color: var(--muted); font-size: 16px; max-width: 62ch; }
@@ -426,7 +428,7 @@ a:focus-visible {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: var(--space-2);
-  margin-top: var(--space-3);
+  margin-top: var(--space-2);
 }
 .photo-set figure { margin: 0; background: #e4ddd0; }
 .photo-set picture { display: block; }
@@ -435,13 +437,21 @@ a:focus-visible {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: var(--space-2);
+  grid-template-rows: auto auto auto auto;
+  row-gap: var(--space-1);
   margin-bottom: var(--space-6);
 }
 .project-pair .work-card {
   display: grid;
   grid-row: 1 / span 4;
   grid-template-rows: subgrid;
+  align-items: start;
 }
+.project-pair .work-card h2,
+.project-pair .work-card .meta,
+.project-pair .work-card .note,
+.project-pair .photo-set { margin: 0; }
+.project-pair .photo-set { margin-top: var(--space-1); }
 .project-pair .work-card h2 { font-size: clamp(26px, 2.5vw, 32px); }
 .project-pair .photo-set { align-self: start; }
 .project-pair .photo-set figure { background: transparent; }
@@ -648,6 +658,9 @@ body.lightbox-open { overflow: hidden; }
     display: block;
     grid-row: auto;
   }
+  .project-pair .work-card h2 { margin: 0 0 var(--space-1); }
+  .project-pair .work-card .note { margin: var(--space-1) 0 0; }
+  .project-pair .photo-set { margin-top: var(--space-2); }
   .footer-bar {
     flex-direction: column;
     align-items: flex-start;
@@ -690,6 +703,7 @@ body.lightbox-open { overflow: hidden; }
 
 a.mail,
 .prose a[href^="mailto:"],
+.prose a[href^="tel:"],
 .cta-band a.mail {
   display: inline-flex;
   align-items: center;
@@ -719,6 +733,14 @@ a.mail,
   color: rgba(245, 240, 230, 0.92);
   font-size: 16px;
   line-height: 1.5;
+}
+.cta-signoff a {
+  color: inherit;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  text-underline-offset: 3px;
 }
 .cta-close { padding: var(--space-5) 0; }
 .cta-close .cta-signoff { margin-top: 0; }
@@ -783,6 +805,8 @@ a.mail,
   font-size: 18px;
   line-height: 1;
 }
+.google-g { display: inline-flex; width: 24px; height: 24px; flex: 0 0 24px; }
+.google-g svg { display: block; width: 24px; height: 24px; }
 .review-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

@@ -478,7 +478,7 @@ def heading_html(text: str) -> str:
     """Keep the place name with the dot so it does not sit alone."""
     if " · " in text:
         left, right = text.split(" · ", 1)
-        return f"{esc(left)} ·&nbsp;{esc(right)}"
+        return f"{esc(left)}&nbsp;· {esc(right)}"
     return esc(text)
 
 
@@ -634,14 +634,18 @@ def head(
 
 
 def signoff() -> str:
-    return '<p class="cta-signoff">Blueprint Construction Services · Building since 2005</p>'
+    return (
+        f'<p class="cta-signoff">Blueprint Construction Services&nbsp;· '
+        f'Building since 2005&nbsp;· '
+        f'<a href="{MAILTO}">{EMAIL}</a></p>'
+    )
 
 
 def cta() -> str:
     return f"""<section class="cta-band">
   <div class="wrap">
     <h2>Every successful project starts with an honest&nbsp;conversation.</h2>
-    <p>Let’s see if I’m the right fit. Write to <a class="mail" href="{MAILTO}">{EMAIL}</a>.</p>
+    <p>Let’s see if I’m the right fit.</p>
     <a class="btn" href="{MAILTO}">Start a conversation</a>
     {signoff()}
   </div>
@@ -676,7 +680,6 @@ def render_slideshow(images: dict, depth: int) -> str:
     data = json.dumps(payload, ensure_ascii=False).replace("<", "\\u003c")
     return f"""<section class="section" data-slideshow tabindex="0" aria-roledescription="carousel" aria-label="Selected work">
   <div class="wrap">
-    <h2 class="section-title">Selected work</h2>
     <div class="slide-frame">
       <a class="slide-link" href="{esc(first["href"])}">
         <img class="slide-photo is-active" src="{esc(first["src"])}" alt="{esc(first["alt"])}" width="1500" height="1000" decoding="async">
@@ -725,7 +728,7 @@ def render_reviews() -> str:
   <div class="wrap">
     <p class="eyebrow">Google reviews</p>
     <h2 id="reviews-title" class="section-title">What clients say</h2>
-    <p class="review-rating"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span> 5.0 stars from 19 Google reviews</p>
+    <p class="review-rating"><span class="stars" role="img" aria-label="5 out of 5 stars">★★★★★</span><span class="google-g" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="24" height="24"><path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/><path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/><path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/><path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/></svg></span> 5.0 stars from 19 Google reviews</p>
     <div class="review-grid">
       {"".join(cards)}
     </div>
@@ -843,7 +846,7 @@ def render_gallery(images: dict) -> str:
     rest = "".join(cards[2:])
     body = f"""{chrome(depth, "projects")}
 <main id="content">
-  <section class="hero">
+  <section class="hero projects-hero">
     <div class="wrap">
       <p class="hero-kicker">Building since 2005</p>
       <h1>Projects</h1>
@@ -974,7 +977,7 @@ def render_contact(images: dict) -> str:
     <div class="wrap">
       <p class="hero-kicker">Contact</p>
       <h1>Honest advice. Solid&nbsp;foundations.</h1>
-      <p class="hero-lead">Let’s see if I’m the right fit. The only way to reach Blueprint is by email.</p>
+      <p class="hero-lead">Let’s see if I’m the right fit. Call or write.</p>
       <a class="btn" href="{MAILTO}">Email Yves</a>
     </div>
   </section>
@@ -986,6 +989,7 @@ def render_contact(images: dict) -> str:
         <p>I’ve seen it happen too often in this industry: poor communication is where projects fall apart.</p>
         <p>When a contractor goes quiet, it creates a domino effect. Trades get the wrong instructions, suppliers miss delivery windows, and avoidable errors start piling up. I refuse to work that way. I limit the number of projects I take on so that I can be your point of contact. Because I’m not spread thin between a dozen sites, I have the time to oversee every trade, double-check every supplier order, and catch the small details before they become big delays.</p>
         <p>I make it a point to get back to you quickly, even on evenings and weekends, because a fast answer today prevents a costly mistake tomorrow. Being a trusted partner means more than doing the work. It means being available to talk about it.</p>
+        <p><a href="tel:+16132622442">613.262.2442</a></p>
         <p><a href="{MAILTO}">{EMAIL}</a></p>
       </div>
     </div>
@@ -1008,8 +1012,6 @@ def render_project_recovery(images: dict) -> str:
         "I help banks, investors, realtors, lawyers, and owners in Ottawa "
         "see where a stalled build stands and what can come next."
     )
-    phone = "613 262 2442"
-    tel = "tel:+16132624442"
     mail = EMAIL
     body = f"""{chrome(depth, "track")}
 <main id="content">
@@ -1117,9 +1119,7 @@ def render_project_recovery(images: dict) -> str:
   <section class="cta-band">
     <div class="wrap">
       <h2>If a project has stalled or become more than you can manage, talk to me before the next move.</h2>
-      <p>Call Yves Eggleston.</p>
-      <a class="btn" href="{tel}">Call {phone}</a>
-      <p class="cta-follow">Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
+      <p>Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
       {signoff()}
     </div>
   </section>
@@ -1293,8 +1293,10 @@ def check_output() -> None:
             for mark in ("-", "–", "—"):
                 if mark in visible:
                     raise SystemExit(f"visible dash in project recovery copy: {mark}")
-            if "613 262 2442" not in visible or "yves@blueprintbuilds.com" not in visible:
+            if "yves@blueprintbuilds.com" not in visible:
                 raise SystemExit("project recovery contact block is incomplete")
+            if "Call Yves" in visible or "tel:" in text:
+                raise SystemExit("project recovery still asks for a phone call")
             if "same day" in visible.lower():
                 raise SystemExit("project recovery promises a timeline")
             if "Back on Track" in visible or "back-on-track" in visible:
@@ -1311,8 +1313,13 @@ def check_output() -> None:
             if "Owners in Ottawa whose builds have stopped" in visible:
                 raise SystemExit("project recovery audience is still owner only")
             continue
+        scrubbed = text
+        if path.parent.name == "contact":
+            if 'href="tel:+16132622442"' not in text or "613.262.2442" not in text:
+                raise SystemExit("contact page is missing the phone link")
+            scrubbed = text.replace('href="tel:+16132622442"', "").replace("613.262.2442", "")
         for term in phone_terms:
-            if term.lower() in text.lower():
+            if term.lower() in scrubbed.lower():
                 raise SystemExit(f"Forbidden string in {path}: {term}")
     sitemap_text = (OUT / "sitemap.xml").read_text()
     for name, _folder_target, _file_target, _canonical in REDIRECTS:
