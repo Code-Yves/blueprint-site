@@ -676,24 +676,33 @@ body.lightbox-open { overflow: hidden; }
     line-height: 0;
     font-size: 0;
   }
+}
+/* Below 660px the four labels no longer fit beside the logo, so the nav takes its own row. */
+@media (max-width: 660px) {
   .header-inner {
     flex-wrap: wrap;
     align-items: flex-start;
     row-gap: 8px;
   }
+  /* One row on phones: the nav spans the full screen width, labels stay 16px, targets stay 44px tall. */
   .nav {
-    flex: 1 1 100%;
-    flex-wrap: wrap;
-    justify-content: flex-start;
+    flex: 0 0 calc(100% + (var(--edge) * 2));
+    flex-wrap: nowrap;
+    justify-content: space-between;
     width: auto;
-    margin: 0;
-    padding: 0;
-    gap: 8px;
+    margin: 0 calc(var(--edge) * -1);
+    padding: 0 8px;
+    gap: 0;
   }
   .nav a {
-    padding: 0 8px;
+    padding: 0 6px;
     min-height: 44px;
+    min-width: 44px;
   }
+}
+@media (max-width: 374px) {
+  .nav { padding: 0 4px; }
+  .nav a { padding: 0 3px; }
 }
 
 @media (max-width: 360px) {
@@ -859,4 +868,70 @@ a.mail,
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .slide-frame img { transition: none; }
+}
+
+/* Project Recovery */
+.hero-note { margin: var(--space-2) 0 0; font-size: 16px; color: var(--muted); }
+@media (min-width: 700px) {
+  .plain-list.two-col { max-width: none; columns: 2; column-gap: var(--space-4); }
+  .plain-list.two-col li { break-inside: avoid; }
+}
+.trust {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: start;
+  margin-top: var(--space-6);
+  max-width: 860px;
+}
+.trust-photo img { width: 160px; height: auto; }
+.trust-me { margin: 0 0 var(--space-3); max-width: 52ch; text-wrap: pretty; }
+.trust-quote {
+  margin: 0;
+  padding: 0 0 0 var(--space-2);
+  border-left: 2px solid var(--teal);
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 18px;
+  line-height: 1.55;
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+.trust-quote p { margin: 0; }
+.trust-who { margin: var(--space-1) 0 0; font-size: 16px; color: var(--muted); }
+.trust-who .review-name { display: inline; margin-right: var(--space-1); color: var(--ink); }
+.trust-link { margin: var(--space-1) 0 0; }
+.trust-link a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+@media (max-width: 699px) {
+  .trust { grid-template-columns: 1fr; gap: var(--space-2); margin-top: var(--space-5); }
+  .trust-photo img { width: 120px; }
+}
+.limits {
+  margin-top: var(--space-5);
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  max-width: 62ch;
+}
+.limits h3 {
+  font-family: "Libre Baskerville", Georgia, serif;
+  font-size: 22px;
+  line-height: 1.4;
+  margin: 0 0 var(--space-1);
+}
+.limits p { margin: 0; font-size: 16px; color: var(--muted); text-wrap: pretty; }
+
+/* Footer drawings: decorative only, never behind text. */
+.cta-band .cta-art { display: block; pointer-events: none; }
+.cta-band .cta-art svg { display: block; width: 100%; height: auto; }
+@media (min-width: 900px) {
+  .cta-band:has(.cta-art) .wrap { min-height: 276px; }
+  .cta-band .cta-art {
+    position: absolute;
+    right: var(--edge);
+    bottom: 0;
+    width: min(40%, 440px);
+    z-index: 0;
+  }
+}
+@media (max-width: 899px) {
+  .cta-band .cta-art { width: 100%; max-width: 320px; margin: var(--space-4) 0 0 auto; }
 }
