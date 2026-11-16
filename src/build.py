@@ -641,21 +641,30 @@ def signoff() -> str:
     )
 
 
-def cta() -> str:
+FOOTER_ART_DIR = SRC / "footer-art"
+
+
+def footer_art(name: str) -> str:
+    # One decorative drawing per page type. Hidden from assistive tech, no raster images.
+    svg = (FOOTER_ART_DIR / f"{name}.svg").read_text().strip()
+    return f'\n    <div class="cta-art" aria-hidden="true">{svg}</div>'
+
+
+def cta(art: str) -> str:
     return f"""<section class="cta-band">
   <div class="wrap">
     <h2>Every successful project starts with an honest&nbsp;conversation.</h2>
     <p>Let’s see if I’m the right fit.</p>
     <a class="btn" href="{MAILTO}">Start a conversation</a>
-    {signoff()}
+    {signoff()}{footer_art(art)}
   </div>
 </section>"""
 
 
-def close_band() -> str:
+def close_band(art: str) -> str:
     return f"""<section class="cta-band cta-close" aria-label="About Blueprint">
   <div class="wrap">
-    {signoff()}
+    {signoff()}{footer_art(art)}
   </div>
 </section>"""
 
@@ -802,7 +811,7 @@ def render_home(images: dict) -> str:
 
   {render_reviews()}
 
-  {cta()}
+  {cta("house")}
 </main>"""
     return head(
         depth=depth,
@@ -863,7 +872,7 @@ def render_gallery(images: dict) -> str:
       </div>
     </div>
   </section>
-  {cta()}
+  {cta("rooflines")}
 </main>"""
     return head(
         depth=depth,
@@ -923,6 +932,16 @@ PROJECT_PAGES = {
 }
 
 
+# Footer drawing for each project page: a stair for homes, an elevation for commercial and multi unit work.
+PROJECT_ART = {
+    "semi-detach-beechwood": "stair",
+    "rideau-gardens": "stair",
+    "residential-interior": "stair",
+    "commercial-orleans": "elevation",
+    "rooftop-new-edinburgh": "elevation",
+}
+
+
 def render_project(project: dict, images: dict) -> str:
     depth = 2
     page = PROJECT_PAGES[project["slug"]]
@@ -953,7 +972,7 @@ def render_project(project: dict, images: dict) -> str:
     </div>
   </section>
 </main>
-{close_band()}"""
+{close_band(PROJECT_ART[project["slug"]])}"""
     return head(
         depth=depth,
         title=title,
@@ -995,7 +1014,7 @@ def render_contact(images: dict) -> str:
     </div>
   </section>
 </main>
-{close_band()}"""
+{close_band("elevation")}"""
     return head(
         depth=depth,
         title=title,
@@ -1012,24 +1031,54 @@ def render_project_recovery(images: dict) -> str:
         "I help banks, investors, realtors, lawyers, and owners in Ottawa "
         "see where a stalled build stands and what can come next."
     )
-    mail = EMAIL
+    cards = [
+        ("A mediator when things break down", "I sit down with you and the trade, look at the agreement and the work, and find a fix that gets the job moving again. Where there is a warranty, I help with that work too."),
+        ("A clear plan to get unstuck", "I review the project, what went wrong and what it will honestly take to finish. The first look is on me. I agree the scope in writing before any paid work, and I can stay on as your person on site."),
+        ("Money to finish the job", "I show you what finishing still costs, so you can talk to a lender or investor with real numbers."),
+        ("Someone in your corner", "Your project stays yours. If a takeover or buyout comes up, I help you read the offers and push for fair terms."),
+    ]
+    more = [
+        ("A written cost to complete", "An honest written cost for the work that is still left."),
+        ("Replacing a builder or trade", "If someone has left, I scope what remains, gather quotes and help you choose who finishes."),
+        ("Permit status", "I review the permit file with the City of Ottawa and list the steps still needed."),
+        ("New home warranty", "I help you document concerns and prepare the warranty claims that fit your home."),
+        ("Liens and holdbacks", "I organize the paperwork and bring in a construction lawyer when you need one."),
+        ("Adjudication", "I organize the records, the payments and the proof of work done."),
+        ("Damage on site", "After a fire, storm, theft or water damage, I document the damage and price the repair for your insurer."),
+        ("Power of sale", "I assess the work still to do and share building and cost details with you and your lawyer or advisers."),
+        ("Last steps to occupancy", "I coordinate the remaining work, the inspections and the signoffs that lead to move in."),
+        ("For banks and other lenders", "Do you hold a stalled construction loan? I review the work in place and the cost still left, so you can decide your next step. This review is not an appraisal, a regulated certification or legal advice."),
+    ]
+
+    def card_html(items: list) -> str:
+        return "\n".join(
+            f"""        <article class="track-card">
+          <h3>{esc(h)}</h3>
+          <p>{esc(t)}</p>
+        </article>"""
+            for h, t in items
+        )
+
+    portrait = picture(images["yves"], depth, "(max-width: 699px) 120px, 160px")
+    mailto_project = f"{MAILTO}?subject=My%20project"
     body = f"""{chrome(depth, "track")}
 <main id="content">
   <section class="hero">
     <div class="wrap">
       <p class="hero-kicker">Project Recovery</p>
       <h1>Your project, back on track.</h1>
-      <p class="hero-audience">I work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.</p>
-      <p class="hero-lead">Whether a project has stalled or become more than you can manage, I help you understand where it stands and what comes next.</p>
+      <p class="hero-lead measure">Has your build stalled, or has your builder left? I look at where it stands and tell you plainly what it will take to finish.</p>
+      <div class="btn-row"><a class="btn" href="{mailto_project}">Email me about your project</a></div>
+      <p class="hero-note">Building in Ottawa since 2005</p>
     </div>
   </section>
 
   <section class="section flush-top">
     <div class="wrap">
       <p class="eyebrow">Who it is for</p>
-      <h2 class="section-title">Banks, investors, realtors, lawyers, and owners.</h2>
-      <p class="section-intro">These are people in Ottawa managing a build who need help completing it. A project may have stalled, or it may have become more than you can manage. That is not a verdict on you. I look at what is in front of me and help you find a way forward.</p>
-      <ul class="plain-list">
+      <h2 class="section-title">Sound familiar?</h2>
+      <p class="section-intro">I work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa. A project may have stalled, or it may have become more than you can manage. That is not a verdict on you. I look at what is in front of me and help you find a way forward.</p>
+      <ul class="plain-list two-col">
         <li>Disputes over incomplete or poor trade work</li>
         <li>Permits that have stalled</li>
         <li>Trades that are missing</li>
@@ -1038,6 +1087,15 @@ def render_project_recovery(images: dict) -> str:
         <li>A builder who has left</li>
         <li>Warranty repairs still outstanding</li>
       </ul>
+      <div class="trust">
+        <figure class="trust-photo">{portrait}</figure>
+        <div class="trust-text">
+          <p class="trust-me">I have been building in Ottawa since 2005. I finish what I start, and when something goes wrong I deal with it directly with the owner.</p>
+          <blockquote class="trust-quote"><p>… he is 100% trustworthy, always professional, and delivers top quality product.</p></blockquote>
+          <p class="trust-who"><span class="review-name">Michelle V.</span> Google review, multiple projects</p>
+          <p class="trust-link"><a href="https://www.google.com/maps?cid=9445139106874514141" target="_blank" rel="noopener">Read my Google reviews</a></p>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -1045,22 +1103,7 @@ def render_project_recovery(images: dict) -> str:
     <div class="wrap">
       <h2 class="section-title">How I can help</h2>
       <div class="track-grid primary">
-        <article class="track-card">
-          <h3>A mediator when things break down</h3>
-          <p>I help you and the trade look at the agreements, the work, and a resolution that can get the job moving again. Where a warranty exists, I can support that warranty work. I am not a court. I do not represent you as a lawyer. I cannot promise that everyone will agree.</p>
-        </article>
-        <article class="track-card">
-          <h3>A clear plan to get unstuck</h3>
-          <p>I review the project, what went wrong, and what finishing honestly involves. The first look is on me. Before any paid work, I agree the scope in writing. If you want, I stay on as your person on site.</p>
-        </article>
-        <article class="track-card">
-          <h3>Money to finish the job</h3>
-          <p>I can help you see what finishing still costs. I do not promise funding, and I do not promise that a lender will step in.</p>
-        </article>
-        <article class="track-card">
-          <h3>Someone in your corner</h3>
-          <p>I do not take over your project. If a takeover or a buyout is on the table, I help you read the options and the proposals and seek fair terms. I cannot promise that the outcome will be fair.</p>
-        </article>
+{card_html(cards)}
       </div>
     </div>
   </section>
@@ -1069,58 +1112,20 @@ def render_project_recovery(images: dict) -> str:
     <div class="wrap">
       <h2 class="section-title">More ways I can help</h2>
       <div class="track-grid more">
-        <article class="track-card">
-          <h3>A written cost to complete</h3>
-          <p>An honest written cost for the work that is still left.</p>
-        </article>
-        <article class="track-card">
-          <h3>Replacing a builder or trade</h3>
-          <p>If someone has left, I can scope the remaining work, gather quotes, and help you choose who finishes. I cannot promise that the right trade will be free to start.</p>
-        </article>
-        <article class="track-card">
-          <h3>Permit status</h3>
-          <p>I review the permit file with the City of Ottawa and name the steps that are still required. I do not promise approval, and I do not promise that a date will be met.</p>
-        </article>
-        <article class="track-card">
-          <h3>New home warranty</h3>
-          <p>I help you identify and document concerns and prepare the submissions that fit your situation. What is covered, and the deadlines, depend on the home and the warranty. Not every concern is eligible, and a repair is not guaranteed.</p>
-        </article>
-        <article class="track-card">
-          <h3>Liens and holdbacks</h3>
-          <p>I organize the paperwork, tell you when a lawyer should look at it, and help you connect with a construction lawyer. I do not give legal opinions. I do not interpret legal deadlines. I do not resolve title or lien rights.</p>
-        </article>
-        <article class="track-card">
-          <h3>Adjudication</h3>
-          <p>I organize project records, payment documents, and evidence of the work done. I do not represent you, and I do not give legal advice.</p>
-        </article>
-        <article class="track-card">
-          <h3>Damage on site</h3>
-          <p>After a fire, a storm, a theft, or water damage, I document the condition and estimate the repair so you can speak with the insurer. I am not a licensed adjuster, and I do not promise that a claim will be paid.</p>
-        </article>
-        <article class="track-card">
-          <h3>Power of sale</h3>
-          <p>I assess the work still to do and share building and cost information with you and with the lawyer or advisers on the file. I do not promise when that information will be ready, and I do not advise on enforcement or the law.</p>
-        </article>
-        <article class="track-card">
-          <h3>Last steps to occupancy</h3>
-          <p>I coordinate the remaining work, the inspections, and the signoffs that lead toward occupancy. I do not guarantee a permit, and I do not guarantee a move in date.</p>
-        </article>
+{card_html(more)}
       </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <h2 class="section-title">For banks and other lenders</h2>
-      <p class="section-intro">Do you hold a stalled construction loan? I can review the work in place and the cost still left, so you can decide your next step. This review is not an appraisal, not a regulated certification, and not legal advice.</p>
+      <div class="limits">
+        <h3>What I do not do</h3>
+        <p>I am not a lawyer, an appraiser or a licensed adjuster, and I do not give legal advice or legal opinions. I cannot promise funding, approvals, dates, warranty repairs, claim payments, a fair outcome or that everyone will agree. I will always tell you plainly what I can and cannot do.</p>
+      </div>
     </div>
   </section>
 
   <section class="cta-band">
     <div class="wrap">
-      <h2>If a project has stalled or become more than you can manage, talk to me before the next move.</h2>
-      <p>Email <a class="mail" href="mailto:{mail}">{mail}</a></p>
-      {signoff()}
+      <h2>Stalled build? Talk to me before the next move.</h2>
+      <a class="btn" href="{mailto_project}">Email me about your project</a>
+      {signoff()}{footer_art("framing")}
     </div>
   </section>
 </main>"""
@@ -1192,7 +1197,7 @@ def render_not_found() -> str:
     </div>
   </section>
 </main>
-{close_band()}
+{close_band("plan")}
 </body>
 </html>
 """
@@ -1254,7 +1259,8 @@ def check_output() -> None:
         "Whatever it is, the way you tell your story",
     ]
     phone_terms = ["613-262-2442", "6132622442", "+1613", "tel:"]
-    html_files = list(OUT.rglob("*.html"))
+    # Search Console verification files are not pages. Never delete them.
+    html_files = [p for p in OUT.rglob("*.html") if not p.name.startswith("google")]
     blob = "\n".join(path.read_text() for path in html_files)
     blob += (OUT / "sitemap.xml").read_text()
     blob += (OUT / "robots.txt").read_text()
@@ -1306,7 +1312,8 @@ def check_output() -> None:
             for phrase in (
                 "Your project, back on track.",
                 "I work with banks, investors, realtors, lawyers, and owners managing their own builds in Ottawa.",
-                "Whether a project has stalled or become more than you can manage, I help you understand where it stands and what comes next.",
+                "Has your build stalled, or has your builder left? I look at where it stands and tell you plainly what it will take to finish.",
+                "What I do not do",
             ):
                 if phrase not in visible:
                     raise SystemExit(f"project recovery missing: {phrase}")
